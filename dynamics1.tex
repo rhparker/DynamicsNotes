@@ -1,0 +1,242 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{lipsum}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs,amsfonts,dsfont}
+\usepackage[shortlabels]{enumitem} 
+\newcounter{question}
+\setcounter{question}{0}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage{ esint }
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\def\noi{\noindent}
+\def\T{{\mathbb T}}
+\def\R{{\mathbb R}}
+\def\N{{\mathbb N}}
+\def\C{{\mathbb C}}
+\def\Z{{\mathbb Z}}
+\def\P{{\mathbb P}}
+\def\E{{\mathbb E}}
+\def\Q{\mathbb{Q}}
+\def\ind{{\mathbb I}}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\ran}{range}
+
+\title{Dynamics Notes 1}
+\author{Ross Parker}
+
+\begin{document}
+
+\section{Contraction Mappings and Their Consequences}
+
+% Banach Fixed Point Theorem
+
+\begin{theorem}Let $(X, |\cdot|)$ be a Banach space, and $D \subset X$ a closed subset of $X$. Suppose that the map $F: D \rightarrow D$ is a contraction, i.e. there exists a positive constant $L < 1$ such that for all $u, v \in D$,
+
+\[
+|F(u) - F(v)| \leq L|u - v|
+\]
+
+In other words, $F$ is Lipschitz, with Lipschitz constant $L < 1$. Then $F$ has a unique fixed point $u^*$ in $D$, i.e. there exists a unique $u^* \in D$ such that $F(u^*) = u^*$.
+
+\begin{proof}
+As with many proofs involving Banach spaces, the idea is to construct a Cauchy sequence in $D$ which must then converge since $X$ is complete. Then since $D$ is closed, the limit must be in $D$. So let's do it!
+
+\begin{enumerate}
+	\item To get out sequence, start with an arbitrary $u_0 \in D$, then keep hitting this with $F$, i.e. for all $n \geq 1$, define $u_n = F(u_{n-1})$. Since $F: D \rightarrow D$, $u_n \in D$ for all $n$.
+	\item Since $F$ is a contraction, we have
+	\begin{align*}
+	|F(u_1) - F(u_0)| &\leq L |u_1 - u_0| \\
+	|F(u_2) - F(u_1)| &\leq L |u_2 - u_1| = L|F(u_1) - F(u_0)| \leq L^2 |u_1 - u_0|
+	\end{align*}
+	Repeating this, we get
+	\[
+	|F(u_{n}) - F(u_{n-1})| \leq L^n |u_1 - u_0|
+	\]
+	\item Show $\{ u_n \}$ is a Cauchy sequence. For arbitrary $n, k \geq 1$, using the triangle inequality, we have
+	\begin{align*}
+	|F(u_{n+k}) - F(u_n)| &\leq \sum_{j=0}^{k-1} |F(u_{n+j+1}) - F(u_{n+j})| \\
+	&\leq \sum_{j=0}^{k-1} L^{n+j}|F(u_1) - F(u_0)| \\
+	&= L^n |F(u_1) - F(u_0)| \sum_{j=0}^{k-1} L^j \\
+	&\leq L^n |F(u_1) - F(u_0)| \sum_{j=0}^{\infty} L^j \\
+	&= |F(u_1) - F(u_0)| \frac{L^n}{1 - L} \\
+	&\rightarrow 0 \text{ as }n \rightarrow \infty
+	\end{align*}
+	where, since $0 < L < 1$, we used the sum of the infinite geometric series.
+	\item Since $\{ u_n \}$ is a Cauchy sequence and $X$ is complete, $u_n$ converges to some element $u^*$ in $X$. Since $D$ is closed and all the $u_n \in D$, $u^* \in D$.
+	\item Since $F$ is Lipschitz, it is continuous, thus by the definition of $u_n$
+	\[
+	F(u^*) = F(\lim_{n\rightarrow \infty} u_n) = \lim_{n \rightarrow \infty} F(u_n) 
+	= \lim_{n \rightarrow \infty} u_{n+1} = u^*
+	\]
+	and so $F(u^*) = u^*$.
+	\item To show $u^*$ is the unique fixed point for $F$ in $D$, we do the usual thing, which is to suppose there are two and take the difference. If $\tilde{u}^*$ is another fixed point, then
+	\begin{align*}
+	|u^* - \tilde{u}^*| = |F(u^*) - F(\tilde{u}^*)| < L|u^* - \tilde{u}^*|,
+	\end{align*}
+	which is impossible since $L < 1$.
+\end{enumerate}
+\end{proof}
+\end{theorem}
+
+As a consequence of this, we will prove the inverse function theorem. For motivation, we will look at the one-dimensional case. Suppose $f: \R \rightarrow \R$ is continuously differentiable at $x = a$. Then we know from calculus that if $f'(a) \neq 0$, $f$ is invertible in a neigborhood of $a$. This makes sense, since if $f'$ is continuous and $f'(a) \neq 0$, $f$ is strictly increasing or strictly decreasing in a neighborhood of $a$, and so we can read the inverse off of the graph of $f$ near $a$. Using the chain role on $f^{-1}(f(x)) = x$ at $x = a$, if $b = f(a)$, then
+
+\[
+(f^{-1})'(b) = \frac{1}{f'(a)}
+\]
+
+We would like to extend this idea to higher dimensions.
+
+\begin{theorem}
+Let $F: \R^n \rightarrow \R^n$ be continuously differentiable (i.e. $C^1$), and suppose the Jacobian (total derivative) $DF(x_0)$ is invertible at $x_0$. Then $F$ is invertible in a neighborhood of $x_0$. Precisely,
+
+\begin{enumerate}[(i)]
+\item There exist neighborhoods $U$ of $x_0$ and $V$ of $y_0 = F(x_0)$, such that the restriction $F|_U: U \rightarrow V$ is a bijection.
+\item The inverse $G: V \rightarrow U$ is also continuously differentiable, and
+\begin{align}
+DG(y) &= DF(G(y))^{-1} && y \in V
+\end{align}
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+
+\item Let $J_0 = DF(x_0)$. Then since $J_0^{-1} DF(x)$ is continuous at $x = x_0$ and $J_0^{-1} DF(x_0) = I$, we can find $\delta > 0$ such that
+
+\begin{enumerate}
+\item $||I - J_0^{-1} DF(x)|| \leq \frac{1}{2}$
+\item $DF(x)$ is nonsingular
+\end{enumerate}
+
+for all $x \in B$, where $B = \overline{B}(x_0, \delta)$ is a closed ball. (ii) follows from the continuity of the determinant.
+
+\item For any $y \in R^N$, define the map
+\begin{equation}
+N(x; y) = x - J_0^{-1}(F(x) - y)
+\end{equation}
+Note that since $J_0$ is nonsingular, $x$ is a fixed point of $N(\cdot; y)$ if and only if $y = F(x)$.
+
+\item Show $N(\cdot; y)$ is contraction on $B$. For all $x \in B$, 
+\[
+||DN(x; y)|| = ||I - J_0^{-1} DF(x)|| \leq \frac{1}{2}
+\]
+
+By the mean value inequality in $\R^n$ (this requires $B$ to be convex, which it of course is), for all $x_1, x_2 \in B$
+
+\[
+|N(x_2; y) - N(x_1; y)| \leq \sup_{x \in B} ||DN(x; y)|| \: |x_2 - x_1| \leq \frac{1}{2}|x_2 - x_1|
+\]
+
+In other words, on the closed ball $B$, $N$ is Lipschitz with Lipschitz constant 1/2, thus a contraction. 
+
+\item Show for $y$ close to $y_0$ that $N: B \rightarrow B$. Let $V = B(y_0, \epsilon)$ be an open ball, where
+
+\[
+\epsilon = \frac{\delta}{ 2 ||J_0^{-1}||}
+\]
+
+Then for $x \in B$ and $y \in V$, using the triangle inequality
+
+\begin{align*}
+|N(x; y) - x_0| &= |N(x; y) - N(x_0; y) + N(x_0; y) - x_0| \\
+&\leq |N(x; y) - N(x_0; y)| + |x_0 - J_0^{-1}(F(x_0) - y) - x_0| \\
+&\leq |N(x; y) - N(x_0; y)| + |J_0^{-1}(y - y_0)| \\
+&\leq \frac{\delta}{2} + |J_0^{-1}||y - y_0| \\
+&\leq \frac{\delta}{2} + ||J_0^{-1}||\frac{\delta}{ 2 ||J_0^{-1}||} = \delta 
+\end{align*}
+
+Thus for $y \in V$, $N: B \rightarrow B$.
+
+\item Since $B$ is closed, $\R^n$ is complete, and $N(\cdot; y): B \rightarrow B$ is a contraction for each $y \in V$, by the Banach Fixed Point Theorem, there is a unique $x \in B$ such that $N(x; y) = x$, i.e. a unique $x \in B$ such that $y = f(x)$. Let $U = F^{-1}(V) \subset B$. Since $F$ is continuous, $U$ is open. Then define the inverse map $G: V \rightarrow U$ by $G(y) = x$, where $x$ is the unique fixed point of $N(\cdot; y)$.
+
+\item Show the inverse map $G$ is continuous. This is just one of the many ways we can do this. Let $y_1, y_2 \in V$ and let $x_1 = G(y_1), x_2 = G(y_2)$. Then we note that
+
+\begin{align*}
+|N(x_1; y) - N(x_2; y)| &= |(x_1 - J_0^{-1}(F(x_1) - y)) - (x_2 - J_0^{-1}(F(x_2) - y))| \\
+&= |(x_1 - x_2) - J_0^{-1} (F(x_1) - F(x_2))|
+\end{align*}
+
+Thus since $N(\cdot; y)$ is a contraction, we have
+
+\begin{align*}
+|x_1 - x_2| - |J_0^{-1} (F(x_1) - F(x_2))| &\leq |(x_1 - x_2) - J_0^{-1} (F(x_1) - F(x_2))| \\
+&= |N(x_1; y) - N(x_2; y)| \\
+&\leq \frac{1}{2}|x_1 - x_2|
+\end{align*}
+
+Rearrange to get 
+
+\begin{align*}
+\frac{1}{2}|x_1 - x_2| &\leq |J_0^{-1} (F(x_1) - F(x_2))| \\
+|x_1 - x_2| &\leq 2 |||J_0^{-1}|| \: |F(x_1) - F(x_2)|
+\end{align*}
+
+Substituting in $x_1 = G(y_1), x_2 = G(y_2)$ and noting that $G$ is the inverse of $F$, this becomes
+
+\begin{align}\label{Glip}
+|G(y_1) - G(y_2)| &\leq 2 |||J_0^{-1}|| \: |y_1 - y_2|
+\end{align}
+
+This implies $G$ is Lipschitz, thus continuous.
+
+\item Finally, we show that $G$ is differentiable for $y \in V$, and that $DG(f(x)) = DF(x)^{-1}$ for $x \in U$. There are many equivalent definitions of differentiability, but we use the following. Since $F: \R^n \rightarrow \R^n$ is differentiable at $x \in U$, we can write $F$ near $x$ as
+
+\begin{equation}\label{diffF}
+F(x + h) = F(x) + DF(x)h + \epsilon(h)
+\end{equation}
+
+where $DF(x)$ is a linear transformation ($n \times n$ matrix), and $|\epsilon(h)|/|h| \rightarrow 0$ as $h \rightarrow 0$. Since $U \in B$, $DF(x)$ is invertible for all $x \in U$. \\
+
+Let $y \in V$. Since $V$ is open, take $k$ sufficiently small so that $y + k \in V$ (and it remains in $V$ as we take $k \rightarrow 0$). Let $x = G(y)$, $x + h = G(y + k)$. Since $G: V \rightarrow U$, $x, x+h \in U$. Since $F$ is differentiable at $x$, we substitute these into \eqref{diffF} to get
+
+\[
+y + k = y + DF(G(y))(G(y + k) - G(y)) + \epsilon(h)
+\]
+
+where $|\epsilon(h)|/|h| \rightarrow 0$ as $h \rightarrow 0$. Rearranging and multiplying by $DF(G(y))^{-1}$, we have
+
+\[
+G(y + k) = G(y) + DF(G(y))^{-1}k - DF(G(y))^{-1}\epsilon(h)
+\]
+
+All that remains is to show that $|DF(G(y))^{-1}\epsilon(h)|/|k| \rightarrow 0$ as $k \rightarrow 0$. Note that since $G$ is continuous at $y$ and $h = G(y + k) = G(y)$, $h \rightarrow 0$ as $k \rightarrow 0$. We write this as
+ 
+\begin{align*}
+\frac{| DF(G(y))^{-1}\epsilon(h)| }{|k|} 
+&\leq || DF(G(y))^{-1}|| \frac{ \epsilon(h)}{|h|}\frac{|h|}{|k|}
+\end{align*}
+
+By the Lipschitz continuity of $G$ in \eqref{Glip}, 
+
+\begin{align*}
+|h| = |x + h - x| = |G(y + k) - G(y)| \leq 2 ||J_0^{-1}|| \: |y + k - y| = 2 ||J_0^{-1}|| \: |k|
+\end{align*}
+
+Substituting this above, we obtain
+
+\begin{align*}
+\frac{| DF(G(y))^{-1}\epsilon(h)| }{|k|} 
+&\leq 2 ||DF(G(y))^{-1}|| \: ||J_0^{-1}|| \frac{ |\epsilon(h)|}{|h|}\frac{|k|}{|k|} \\
+&= 2 ||DF(G(y))^{-1}|| \: ||J_0^{-1}|| \frac{ |\epsilon(h)|}{|h|} \\
+&\rightarrow 0 \text{ as }k \rightarrow 0
+\end{align*}
+
+
+
+
+
+\end{enumerate}
+\end{proof}
+\end{theorem}
+
+\end{document}
