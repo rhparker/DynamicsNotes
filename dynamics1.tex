@@ -41,7 +41,7 @@
 
 % Banach Fixed Point Theorem
 
-\begin{theorem}Let $(X, |\cdot|)$ be a Banach space, and $D \subset X$ a closed subset of $X$. Suppose that the map $F: D \rightarrow D$ is a contraction, i.e. there exists a positive constant $L < 1$ such that for all $u, v \in D$,
+\begin{theorem}Let $(X, |\cdot|)$ be a Banach space, and $D \subset X$ a closed, nonempty subset of $X$. Suppose that the map $F: D \rightarrow D$ is a contraction, i.e. there exists a positive constant $L < 1$ such that for all $u, v \in D$,
 
 \[
 |F(u) - F(v)| \leq L|u - v|
@@ -231,7 +231,292 @@ Substituting this above, we obtain
 &\rightarrow 0 \text{ as }k \rightarrow 0
 \end{align*}
 
+\end{enumerate}
+\end{proof}
+\end{theorem}
 
+A more useful version is the uniform contraction mapping principle
+
+\begin{theorem}
+Let 
+\begin{enumerate}
+\item $(X, |\cdot|)$ be a Banach space
+\item $D \subset X$ a closed, nonempty subset of $X$
+\item $B \subset R^p$ be an open set (the ``parameter'' space)
+\item $F: D \times B \rightarrow D$ a map which is uniform contraction in $\mu \in B$, i.e. there exists a constant $L < 1$ such that for all $\mu \in B$ and $u, v \in D$
+\begin{equation}
+|F(u, \mu) - F(v, \mu)| \leq L|u - v|
+\end{equation}
+\end{enumerate}
+
+Using the Banach Fixed Point Theorem, let $G: B \rightarrow D$ be the map which associates every $\mu \in B$ with the unique fixed point of $F(\cdot; \mu)$. Then
+
+\begin{enumerate}[(i)]
+\item If $F$ is uniformly Lipschitz in $\mu$, i.e. if there exists a constant $M > 0$ such that for all $u \in D$ and $\mu_2, \mu_2 \in B$, 
+\[
+|F(u, \mu_1) - F(u, \mu_2)| \leq M |\mu_1 - \mu_2|
+\]
+then $G$ is Lipschitz, with Lipschitz constant $M / (1 - L)$.
+\item If $F \in C^k(D \times B, X)$ for $k \geq 0$, then $G \in C^k(B, X)$. $k = \infty$ and analyticity are allowed.
+\end{enumerate}
+\begin{proof}
+\begin{enumerate}
+\item Using the fact that $G(\mu)$ is a fixed point of $F(\cdot; \mu)$ and the triangle inequality
+
+\begin{align*}
+|G(\mu_1) - G(\mu_2)| &= |F( G(\mu_1); \mu_1) - F(G(\mu_2); \mu_2)| \\
+&\leq |F( G(\mu_1); \mu_1) - F(G(\mu_1); \mu_2)| + |F( G(\mu_1); \mu_2) - F(G(\mu_2); \mu_2)| \\
+&\leq |F( G(\mu_1); \mu_1) - F(G(\mu_1); \mu_2)| + L |G(\mu_1) - G(\mu_2)|
+\end{align*}
+
+Since $0 <L < 1$, subtract the last term on the RHS to get
+
+\begin{align*}
+(1 - L)|G(\mu_1) - G(\mu_2)| 
+&\leq |F( G(\mu_1); \mu_1) - F(G(\mu_1); \mu_2)|
+\end{align*}
+
+Divide by $(1 - L)$ to get 
+
+\begin{align}\label{Gmudiff}
+|G(\mu_1) - G(\mu_2)| &\leq \frac{1}{1-L}|F( G(\mu_1); \mu_1) - F(G(\mu_1); \mu_2)|
+\end{align}
+
+\item For (i), if $F$ is uniformly Lipschitz in $\mu$, then \eqref{Gmudiff} becomes 
+
+\begin{align*}
+|G(\mu_1) - G(\mu_2)| &\leq \frac{M}{1-L}| G(\mu_1); \mu_1) - G(\mu_1); \mu_2)| \\
+&= \frac{M}{1-L} |\mu_1 - \mu_2| \\
+\end{align*}
+
+\item For (ii), if $k = 0$ (i.e. $F$ is continuous in both variables), then the RHS of \eqref{Gmudiff} $\rightarrow 0$ as $\mu_2 \rightarrow \mu_1$, thus $G$ is continuous.
+
+\item The cases $k > 1$ (including $k = \infty$ and analyticity) are annoying to prove, so we will ignore them for now.
+
+\end{enumerate}
+
+\end{proof}
+\end{theorem}
+
+We will use the uniform contraction mapping principle to prove the implicit function theorem, which is one of the most important analytical tools in dynamcial systems.\\
+
+Before we do that, here is a motivating example.\\
+
+Consider the unit circle, $x^2 + y^2 = 1$. This is clearly not a function, since other than the right and left endpoints $(0, 1)$ and $(0, -1)$, there are two values of $y$ for every $x$. That being said, at any other point, we can solve \emph{locally} for $y$ as a function of $x$. Near any point on the upper semicircle, for example, we have $y = \sqrt{1 - x^2}$. \\
+
+Why does this fail at the left and right endpoints? Looking at the picture, it is clear that we cannot solve for $y$ in terms of $x$ there. For a more mathematical explanation, let's write the unit circle as the zero set of the function $f(x, y) = x^2 + y^2 - 1$. At $(0, 1)$, we have $\partial f / \partial y = 0$. In other words, near $(0, 1)$, $f$
+
+We can now state and prove the implicit function theorem.
+
+\begin{theorem} 
+Let
+\begin{enumerate}
+\item $X$, $Y$, $Z$ Banach spaces
+\item $U \subset X$, $V \subset Y$ open sets
+\item $F: U \times V \rightarrow Z$ continuously differentiable
+\item $(x_0, y_0) \in X \times Y$ with $F(x_0, y_0) = 0$
+\item The total (Frechet) derivative $D_x(x_0, y_0): X \rightarrow Z$ has a bounded inverse
+\end{enumerate}
+Then
+\begin{enumerate}
+\item We can solve for $x$ as a function of $y$ near $(x_0, y_0)$. That is, there is a neighborhood $U_0 \times V_0 \subset U \times V$ of $(x_0, y_0)$ and a continuously differentiable function $f: V_0 \rightarrow U_0$ with $f(y_0) = x_0$ such that $F(x, y) = 0$ for $(x, y) \in U_0 \times V_0$ if and only if $x = f(y)$.
+
+\item If $F$ is $C^k(U \times V, Z)$ (or analytic) in a neighborhood of $(x_0, y_0)$, then $f is C^k(V_0,X)$ (or analytic) in a neighborhood of $y_0$.
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item Since $D_x(x_0, y_0)$ is invertible, define $L: Z \rightarrow X$ by $Lz = [D_x(x_0, y_0)]^{-1}z$. 
+\item Define the map $G: U \times V \rightarrow X$ by 
+\begin{equation}\label{defG}
+G(x, y) = x - L F(x, y)
+\end{equation}
+Since $F$ is $C^1$, $G$ is $C^1$ as well, and
+
+\[
+DG_x(x, y) = I - L \: DF_x(x, y)
+\]
+
+In particular, $DG_x(x_0, y_0) = 0$.
+
+\item $F(x, y) = 0$ if an only if $G(x, y) = x$, i.e. $x$ is a fixed point of $G$. We will show that $G$ is a uniform contraction on a neighborhood of $(x_0, y_0)$. 
+
+\item Since $DG_x(x, y)$ is continuous and $DG_x(x_0, y_0) = 0$, we can find open balls $U_0 = B(x_0, \delta)$ and $V_0 = B(y_0, \epsilon)$ such that for $(x, y) \in \overline{U_0} \times V_0$,
+
+\[
+||DG_x(x, y)|| < \frac{1}{2} 
+\]
+
+\item Since the map $y \rightarrow F(x_0, y)$ is continuous in $y$ and $F(x_0, y_0) = 0$, we can (if needed) decrease $\epsilon$ so that for $y \in V_0$
+
+\[
+|F(x_0, y)| \leq \frac{\delta}{2 ||L||}
+\]
+
+\item Next, we show that $G: \overline{U_0} \times V_0 \rightarrow \overline{U_0}$. By the triangle inequalty and the mean value inequality, for $x \in \overline{U_0}$
+
+\begin{align*}
+|G(x, y) - x_0| &\leq |G(x, y) - G(x_0, y)| + |G(x_0, y) - x_0| \\
+&\leq \sup_{x\in \overline{U_0}}||DG_x(x, y)||\:|x - x_0| + |x_0 - L F(x_0, y) - x_0 | \\
+&\leq \frac{1}{2} |x - x_0| + |L F(x_0, y)| \\
+&\leq \frac{\delta}{2} + ||L|| \frac{\delta}{2 ||L||} \\
+&\leq \delta
+\end{align*}
+
+Thus we have shown that $G: \overline{U_0} \times V_0 \rightarrow \overline{U_0}$. 
+
+\item Finally, we show that $G$ is a uniform contraction. This holds by the mean value inequality, since for $x_1, x_2 \in \overline{U_0}$ and any $y \in V_0$,
+
+\[
+|G(x_1, y) - G(x_2, y)| \leq \sup_{x\in \overline{U_0}}||DG_x(x, y)||\:|x_1 - x_2| \leq \frac{1}{2}|x_1 - x_2|
+\]
+\item Thus, by the Uniform Contraction Mapping Principle, there is a unique $C^1$ function $f: V_0 \rightarrow U_0$ which maps $y \in V_0$ to the unique fixed point $x$ of $G(\cdot, y)$. Since $F(x, y) = 0$ if and only if $x$ is a fixed point of $G(\cdot, y)$, this implies that 
+	\begin{enumerate}
+	\item $f(y_0) = x_0$
+	\item For $(x, y) \in U_0 \times V_0$, $F(x, y) = 0$ if and only if $x = f(y)$
+	\end{enumerate}
+\end{enumerate}
+\end{proof}
+\end{theorem}
+
+\section{Existence and Uniqueness}
+
+Consider the initial value problem
+
+\begin{align}\label{IVP}
+\frac{du}{dt} &= f(u) \\
+u(0) &= u_0 \nonumber
+\end{align}
+
+where $f: \R^n \rightarrow \R^n$ is (at minimum) continuous.\\
+
+We would like to answer the following questions:
+\begin{enumerate}
+	\item Does the IVP \eqref{IVP} have a solution? In other words, can we find a time interval $[a, b]$ (containing 0) and a differentiable function $u: [a, b] \rightarrow \R^n$ for which \eqref{IVP} is satisfied for all $t \in (a, b)$.
+	\item Is that solution unique?
+\end{enumerate}
+
+Before we delve into the theory, let's look at some simple examples on $\R$.
+
+\begin{enumerate}
+
+\item Exponential growth/decay
+\begin{align*}
+\frac{du}{dt} &= k u \\
+u(0) &= u_0 
+\end{align*}
+By separation of variables, this has solution
+\[
+u(t) = u_0 e^{kt}
+\]
+which exists for all time $t$.
+
+\item ``Superexponential'' growth
+\begin{align*}
+\frac{du}{dt} &= u^2 \\
+u(0) &= u_0
+\end{align*}
+By separation of variables, this has solution
+\[
+u(t) = \frac{u_0}{1 - u_0 t}
+\]
+If we take $u_0 = 1$, the solution becomes
+\[
+u(t) = \frac{1}{1 - t}
+\]
+Since we start at $t = 0$, $u(t) \rightarrow \infty$ as $t \rightarrow 1$. In other words, the solution blows up in finite time.
+
+\item ``Stopping'' at a boundary
+\begin{align*}
+\frac{du}{dt} &= -\frac{t}{u+1} \\
+u(0) &= 0
+\end{align*}
+By separation of variable, the solution is
+\[
+u(t) = \sqrt{1 - t^2} - 1
+\]
+This solution is finite for all $t \in [-1, 1]$, but it ceases to exist (i.e. acquires a nonzero imaginary part) outside of this interval. As $t \rightarrow \pm 1$ from the inside, $u(t) \rightarrow -1$, which is exactly where the RHS of the IVP has a discontinuity.
+
+\item Nonuniqueness
+\begin{align*}
+\frac{du}{dt} &= u^{1/3} \\
+u(0) &= 0
+\end{align*}
+We can see by inspection that $u(t) = 0$ is a solution. By separation of variable, we can also find another solution.
+\begin{align*}
+u(t) &= \left( \frac{2t}{3} \right)^{3/2} && t \geq 0
+\end{align*}
+We actually have an infinite family of solutions, given piecewise by
+\[
+u(t) = \begin{cases}
+0 & t \leq T \\
+\left( \frac{2(t-T)}{3} \right)^{3/2} & t > T
+\end{cases}
+\]
+where $T \geq 0$. (This piecewise function is $C^1$ but not smooth).
+\end{enumerate}
+
+We are now ready to discuss existence and uniqueness of solutions to the IVP \eqref{IVP}. The most basic result is due to Peano.
+
+% Peano existence theorem
+
+\begin{theorem}
+Consider the initial value problem on $\R^n$
+\begin{align}
+\frac{du}{dt} &= f(u) \\
+u(t_0) &= u_0 \nonumber
+\end{align}
+If $f$ is continuous in a neighborhood of $(t_0, u_0)$, then there exists at least one solution $u(t)$ defined in a neighborhood of t0. There is no guarantee of uniqueness.
+\begin{proof}
+A sketch of the proof on $\R$ goes as follows.
+\begin{enumerate}
+	\item Choose an interval $[a, b]$ containing $t_0$.
+	\item Construct a sequence of approximate solutions $\{ u_n(t) \}$ using the forward Euler method, where the mesh size $h \rightarrow 0$ as $n \rightarrow \infty$.
+	\item Show this sequence $\{ u_n(t) \}$ is uniformly bounded and equicontinuous.
+	\item By Arzela-Ascoli, $\{ u_n(t) \}$ must have a subsequence which converges to $u(t)$.
+	\item Show $u(t)$ is differentiable and satisfies the IVP. 
+\end{enumerate}
+A similar idea works for $\R^n$, but the sequence of approximations is less straightforward.
+\end{proof}
+\end{theorem}
+
+Although this is a useful result, we really want uniqueness. To do that, we will the contraction mapping principle to prove existence and uniqueness in one shot. However, we will require a stronger condition on $f$ than just continuity.
+
+% Picard - Lindelof theorem
+
+\begin{theorem}
+Consider the initial value problem on $\R^n$
+\begin{align}\label{IVPp}
+\frac{du}{dt} &= f(u) \\
+u(0) &= u_0 \nonumber
+\end{align}
+Suppose that $f$ is locally Lipschitz, i.e. for every $v \in \R^n$ there exists a radius $\delta$ and a Lipschitz constant $L$ (both depending on $v$) such that for all $u_1, u_2 \in B(v, \delta)$,
+\[
+|f(u_1) - f(u_2)| \leq L|u_1 - u_2|
+\]
+Then for every $v \in \R^n$ there exists a radius $\delta$ and a time interval $[a, b]$ containing 0 such that
+\begin{enumerate}[(i)]
+\item For each initial condition $u_0 \in B(v, \delta)$ the IVP has a unique solution $u(t; u_0)$ on $[a, b]$.
+\item The map $u_0 \rightarrow u(\cdot; u_0)$ is Lipschitz in $u_0$.
+\item If $f$ is $C^k$ for $k \geq 1$, then
+\begin{enumerate}
+\item The solution $u(t; u_0)$ is $C^{k+1}$ in $t$
+\item The map $u_0 \rightarrow u(\cdot; u_0)$ is $C^k$ in $u_0$
+\end{enumerate}
+$k = \infty$ and analyticity are allowed.
+\end{enumerate}
+\begin{proof}
+The essence of the proof is that we will write the IVP in integrated form, use the integrated form to construct a linear operator between Banach spaces, and then show that this operator is a uniform contraction.
+\begin{enumerate}
+\item By the fundamental theorem of calculus, if $u$ is differentiable, then
+\begin{equation*}
+u(t) = u(0) + \int_0^t u'(\tau) d \tau
+\end{equation*}
+
+Thus $u(t)$ is a solution to the IVP \eqref{IVPp} if an only if it is a solution to the integral equation
+\begin{equation}\label{intform}
+u(t) = u(0) + \int_0^t f(u(\tau)) d \tau
+\end{equation}
 
 
 
