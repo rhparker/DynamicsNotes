@@ -39,21 +39,51 @@
 
 \section{Contraction Mappings and Their Consequences}
 
+The Banach Fixed Point Theorem not only guarantees the existence of a unique fixed point of a function, but lets us actually compute it by successive approximations. As motivation, consider Newton's Method for root finding.\\
+
+Newton's Method is used to find zeros of a differentiable, real-valed function.
+
+\begin{enumerate}[(i)]
+\item Start with an initial guess $x_0$
+\item Iterate the algorithm $x_{n+1} = x_n - f(x_n)/f'(x_n)$. This is where the tangent line of $f$ at $(x_n, f(x_n)$ hits the $x-$axis.
+\item ????
+\item PROFIT
+\end{enumerate}
+
+Ideally, this method should converge to a unique zero of $f$, which is hopefully the zero near the initial guess. Define a ``Newton function'' $g$ by
+
+\[
+g(x) = x - \frac{f(x)}{f'(x)}
+\]
+
+If $x$ is a fixed point of $g$, i.e. $g(x) = x$, then (as long as $f'(x) \neq 0$), $f(x) = 0$. We would like Newton's Method to converge to a fixed point of the Newton function $g$. \\
+
+It turns out that criterion we will need is that the map $g$ is a contraction.\\
+
+\begin{definition}Let $D$ be a subset of a normed vector space $(X, |\cdot|)$. Then $F: D \rightarrow D$ is a \emph{contraction} if there exists a constant $L$ with $0 < L < 1$ such that 
+\[
+|F(x) - F(y)| \leq L |x - y|
+\]
+for all $x, y \in D$. In other words, $F$ is Lipschitz with Lipschitz constant $L < 1$.
+\end{definition}
+
+We can now state the Banach Fixed Point Theorem, which is also called the Contraction Mapping Principle.\\
+
 % Banach Fixed Point Theorem
 
-\begin{theorem}Let $(X, |\cdot|)$ be a Banach space, and $D \subset X$ a closed, nonempty subset of $X$. Suppose that the map $F: D \rightarrow D$ is a contraction, i.e. there exists a positive constant $L < 1$ such that for all $u, v \in D$,
+\begin{theorem}[Banach Fixed Point Theorem] Let $(X, |\cdot|)$ be a Banach space, and $D \subset X$ a closed, nonempty subset of $X$. Suppose that the map $F: D \rightarrow D$ is a contraction, i.e. there exists a positive constant $L < 1$ such that for all $u, v \in D$,
 
 \[
 |F(u) - F(v)| \leq L|u - v|
 \]
 
-In other words, $F$ is Lipschitz, with Lipschitz constant $L < 1$. Then $F$ has a unique fixed point $u^*$ in $D$, i.e. there exists a unique $u^* \in D$ such that $F(u^*) = u^*$.
+Then $F$ has a unique fixed point $u^*$ in $D$, i.e. there exists a unique $u^* \in D$ such that $F(u^*) = u^*$.
 
 \begin{proof}
-As with many proofs involving Banach spaces, the idea is to construct a Cauchy sequence in $D$ which must then converge since $X$ is complete. Then since $D$ is closed, the limit must be in $D$. So let's do it!
+As with many proofs involving Banach spaces, the idea is to construct a Cauchy sequence in $D$ which must then converge since $X$ is complete. Then since $D$ is closed, the limit must be in $D$. Let's do it!
 
 \begin{enumerate}
-	\item To get out sequence, start with an arbitrary $u_0 \in D$, then keep hitting this with $F$, i.e. for all $n \geq 1$, define $u_n = F(u_{n-1})$. Since $F: D \rightarrow D$, $u_n \in D$ for all $n$.
+	\item Start with an arbitrary $u_0 \in D$, then keep hitting this with $F$. For all $n \geq 1$, define $u_n = F(u_{n-1})$. Since $F: D \rightarrow D$, $u_n \in D$ for all $n$.
 	\item Since $F$ is a contraction, we have
 	\begin{align*}
 	|F(u_1) - F(u_0)| &\leq L |u_1 - u_0| \\
@@ -73,14 +103,14 @@ As with many proofs involving Banach spaces, the idea is to construct a Cauchy s
 	&\rightarrow 0 \text{ as }n \rightarrow \infty
 	\end{align*}
 	where, since $0 < L < 1$, we used the sum of the infinite geometric series.
-	\item Since $\{ u_n \}$ is a Cauchy sequence and $X$ is complete, $u_n$ converges to some element $u^*$ in $X$. Since $D$ is closed and all the $u_n \in D$, $u^* \in D$.
-	\item Since $F$ is Lipschitz, it is continuous, thus by the definition of $u_n$
+	\item Show $\{ u_n \}$ converges to an element of $D$. Since $\{ u_n \}$ is a Cauchy sequence and $X$ is complete, $u_n$ converges to some element $u^*$ in $X$. Since $D$ is closed and all the $u_n \in D$, $u^* \in D$.
+	\item Show $u^*$ is a fixed point of $F$. Since $F$ is Lipschitz, it is continuous, thus by the definition of $u_n$
 	\[
 	F(u^*) = F(\lim_{n\rightarrow \infty} u_n) = \lim_{n \rightarrow \infty} F(u_n) 
 	= \lim_{n \rightarrow \infty} u_{n+1} = u^*
 	\]
 	and so $F(u^*) = u^*$.
-	\item To show $u^*$ is the unique fixed point for $F$ in $D$, we do the usual thing, which is to suppose there are two and take the difference. If $\tilde{u}^*$ is another fixed point, then
+	\item Show $u^*$ is the unique fixed point for $F$ in $D$. We do the usual thing, which is to suppose there are two and take the difference. If $\tilde{u}^*$ is another fixed point, then
 	\begin{align*}
 	|u^* - \tilde{u}^*| = |F(u^*) - F(\tilde{u}^*)| < L|u^* - \tilde{u}^*|,
 	\end{align*}
@@ -89,22 +119,24 @@ As with many proofs involving Banach spaces, the idea is to construct a Cauchy s
 \end{proof}
 \end{theorem}
 
-As a consequence of this, we will prove the inverse function theorem. For motivation, we will look at the one-dimensional case. Suppose $f: \R \rightarrow \R$ is continuously differentiable at $x = a$. Then we know from calculus that if $f'(a) \neq 0$, $f$ is invertible in a neigborhood of $a$. This makes sense, since if $f'$ is continuous and $f'(a) \neq 0$, $f$ is strictly increasing or strictly decreasing in a neighborhood of $a$, and so we can read the inverse off of the graph of $f$ near $a$. Using the chain role on $f^{-1}(f(x)) = x$ at $x = a$, if $b = f(a)$, then
+As a consequence of this, we will prove the inverse function theorem. For motivation, we will look at the one-dimensional case. Suppose $f: \R \rightarrow \R$ is continuously differentiable at $x = a$. Then we know from calculus that if $f'(a) \neq 0$, $f$ is invertible in a neigborhood of $a$. This makes sense, since if $f'$ is continuous and $f'(a) \neq 0$, $f$ is strictly increasing or strictly decreasing in a neighborhood of $a$, and so we can read the inverse off of the graph of $f$ near $a$. Using the chain rule on $f^{-1}(f(x)) = x$ at $x = a$, if $b = f(a)$, then
 
 \[
 (f^{-1})'(b) = \frac{1}{f'(a)}
 \]
 
-We would like to extend this idea to higher dimensions.
+We would like to extend this idea to higher dimensions. We can actually prove this as a corollary of the Implicit Function Theorem once we have proved the Uniform Contraction Mapping Principle, but we can prove it directly here.\\
 
-\begin{theorem}
+% inverse function theorem
+
+\begin{theorem}[Inverse Function Theorem]
 Let $F: \R^n \rightarrow \R^n$ be continuously differentiable (i.e. $C^1$), and suppose the Jacobian (total derivative) $DF(x_0)$ is invertible at $x_0$. Then $F$ is invertible in a neighborhood of $x_0$. Precisely,
 
 \begin{enumerate}[(i)]
 \item There exist neighborhoods $U$ of $x_0$ and $V$ of $y_0 = F(x_0)$, such that the restriction $F|_U: U \rightarrow V$ is a bijection.
-\item The inverse $G: V \rightarrow U$ is also continuously differentiable, and
+\item The inverse $G: V \rightarrow U$ is also continuously differentiable, and for $y \in V$,
 \begin{align}
-DG(y) &= DF(G(y))^{-1} && y \in V
+DG(y) &= DF(G(y))^{-1}
 \end{align}
 \end{enumerate}
 
@@ -235,21 +267,21 @@ Substituting this above, we obtain
 \end{proof}
 \end{theorem}
 
-A more useful version is the uniform contraction mapping principle
+We can generalize this with the Uniform Contraction Mapping Principle. The idea is that we have a family of contractions $F(x; \mu)$ indexed by a parameter $\mu$. Let $G(\mu)$ map each $\mu$ to the corresponding unique fixed point of $F(\cdot; \nu)$ from the Banach Fixed Point Theorem. Then we will show that $G$ is as smooth as $F$.
 
-\begin{theorem}
+\begin{theorem}[Uniform Contraction Mapping Principle]
 Let 
 \begin{enumerate}
 \item $(X, |\cdot|)$ be a Banach space
 \item $D \subset X$ a closed, nonempty subset of $X$
 \item $B \subset R^p$ be an open set (the ``parameter'' space)
-\item $F: D \times B \rightarrow D$ a map which is uniform contraction in $\mu \in B$, i.e. there exists a constant $L < 1$ such that for all $\mu \in B$ and $u, v \in D$
+\item $F: D \times B \rightarrow D$ a map which is \emph{uniform contraction}, i.e. there exists a constant $L < 1$ such that for all $\mu \in B$ and $u, v \in D$
 \begin{equation}
 |F(u, \mu) - F(v, \mu)| \leq L|u - v|
 \end{equation}
 \end{enumerate}
 
-Using the Banach Fixed Point Theorem, let $G: B \rightarrow D$ be the map which associates every $\mu \in B$ with the unique fixed point of $F(\cdot; \mu)$. Then
+Let $G: B \rightarrow D$ be the map which associates every $\mu \in B$ with the unique fixed point of $F(\cdot; \mu)$ from the Banach Fixed Point Theorem. Then
 
 \begin{enumerate}[(i)]
 \item If $F$ is uniformly Lipschitz in $\mu$, i.e. if there exists a constant $M > 0$ such that for all $u \in D$ and $\mu_2, \mu_2 \in B$, 
@@ -260,8 +292,9 @@ then $G$ is Lipschitz, with Lipschitz constant $M / (1 - L)$.
 \item If $F \in C^k(D \times B, X)$ for $k \geq 0$, then $G \in C^k(B, X)$. $k = \infty$ and analyticity are allowed.
 \end{enumerate}
 \begin{proof}
+
 \begin{enumerate}
-\item Using the fact that $G(\mu)$ is a fixed point of $F(\cdot; \mu)$ and the triangle inequality
+\item First, we derive an expression for $|G(\mu_1) - G(\mu_2)|$. Using the fact that $G(\mu)$ is a fixed point of $F(\cdot; \mu)$ and the triangle inequality
 
 \begin{align*}
 |G(\mu_1) - G(\mu_2)| &= |F( G(\mu_1); \mu_1) - F(G(\mu_2); \mu_2)| \\
@@ -269,7 +302,7 @@ then $G$ is Lipschitz, with Lipschitz constant $M / (1 - L)$.
 &\leq |F( G(\mu_1); \mu_1) - F(G(\mu_1); \mu_2)| + L |G(\mu_1) - G(\mu_2)|
 \end{align*}
 
-Since $0 <L < 1$, subtract the last term on the RHS to get
+Since $0 < L < 1$, subtract the last term on the RHS to get
 
 \begin{align*}
 (1 - L)|G(\mu_1) - G(\mu_2)| 
@@ -279,19 +312,46 @@ Since $0 <L < 1$, subtract the last term on the RHS to get
 Divide by $(1 - L)$ to get 
 
 \begin{align}\label{Gmudiff}
-|G(\mu_1) - G(\mu_2)| &\leq \frac{1}{1-L}|F( G(\mu_1); \mu_1) - F(G(\mu_1); \mu_2)|
+|G(\mu_1) - G(\mu_2)| &\leq \frac{1}{1-L}|F( G(\mu_1); \mu_1) - F(G(\mu_2); \mu_2)|
 \end{align}
 
-\item For (i), if $F$ is uniformly Lipschitz in $\mu$, then \eqref{Gmudiff} becomes 
+\item To show (i), if $F$ is uniformly Lipschitz in $\mu$, then \eqref{Gmudiff} becomes 
 
 \begin{align*}
 |G(\mu_1) - G(\mu_2)| &\leq \frac{M}{1-L}| G(\mu_1); \mu_1) - G(\mu_1); \mu_2)| \\
 &= \frac{M}{1-L} |\mu_1 - \mu_2| \\
 \end{align*}
 
-\item For (ii), if $k = 0$ (i.e. $F$ is continuous in both variables), then the RHS of \eqref{Gmudiff} $\rightarrow 0$ as $\mu_2 \rightarrow \mu_1$, thus $G$ is continuous.
+\item For (ii), we first take the case $k = 0$ (i.e. $F$ is continuous in both variables). Since the RHS of \eqref{Gmudiff} $\rightarrow 0$ as $\mu_2 \rightarrow \mu_1$, $G$ is continuous.
 
-\item The cases $k > 1$ (including $k = \infty$ and analyticity) are annoying to prove, so we will ignore them for now.
+\item Next, we consider the case $k = 1$. Recall that $G(\mu) = F(G(\mu),\mu)$. If $G$ were differentiable, then by the chain rule we would have
+
+\[
+DG(\mu) = DF(G(\mu),\mu) = D_X F(G(\mu), \mu)DG(\mu) + D_B F(G(\mu), \mu)
+\]
+
+In other words, $DG(\mu)$ is a fixed point of the mapping $\Phi: \mathcal{L}(B, X) \times B \rightarrow \mathcal{L}(B, X)$
+
+\[
+\Phi(A; \mu) = D_X F(G(\mu), \mu) A + D_B F(G(\mu), \mu)
+\]
+
+The map $\Phi$ is a uniform contraction, since for $A_1, A_2 \in \mathcal{L}(B, X)$
+
+\begin{align*}
+|\Phi(&A_1; \mu) - \Phi(A_2; \mu)| \\
+&= | D_X F(G(\mu), \mu) A_1 + D_B F(G(\mu), \mu) - D_X F(G(\mu), \mu) A_2 + D_B F(G(\mu), \mu) | \\
+&\leq | D_X F(G(\mu), \mu) |\:|A_1 - A_2| \\
+&\leq L |A_1 - A_2|
+\end{align*}
+
+where the last line holds since $F(\cdot; \mu)$ is Lipschitz with constant $L$ (this follows from the definition of the derivative and is not hard to show).\\
+
+By the Uniform Contraction Mapping Principle, for each $\mu \in D$ there a unique fixed point $Z(\mu)$ of $\Phi$. Since $F$ is $C^1$, $\Phi$ is continuous, thus the map $Z(\mu)$ is continuous.\\
+
+The only thing that remains is to show that $DG(\mu)$ exists and is equal to $Z(\mu)$. This is rather technical, so it will be omitted for now. (References will be provided at some point.)
+
+\item 
 
 \end{enumerate}
 
@@ -490,13 +550,13 @@ Consider the initial value problem on $\R^n$
 \frac{du}{dt} &= f(u) \\
 u(0) &= u_0 \nonumber
 \end{align}
-Suppose that $f$ is locally Lipschitz, i.e. for every $v \in \R^n$ there exists a radius $\delta$ and a Lipschitz constant $L$ (both depending on $v$) such that for all $u_1, u_2 \in B(v, \delta)$,
+Suppose that $f$ is locally Lipschitz, i.e. for every $\tilde{u} \in \R^n$ there exists a radius $\delta$ and a Lipschitz constant $L$ (both depending on $v$) such that for all $u_1, u_2 \in B(\tilde{u}, \delta)$,
 \[
 |f(u_1) - f(u_2)| \leq L|u_1 - u_2|
 \]
-Then for every $v \in \R^n$ there exists a radius $\delta$ and a time interval $[a, b]$ containing 0 such that
+Then for every $\tilde{u} \in \R^n$ there exists a radius $\delta$ and a time interval $[a, b]$ containing 0 such that
 \begin{enumerate}[(i)]
-\item For each initial condition $u_0 \in B(v, \delta)$ the IVP has a unique solution $u(t; u_0)$ on $[a, b]$.
+\item For each initial condition $u_0 \in B(\tilde{u}, \delta)$ the IVP \eqref{IVPp} has a unique solution $u(t; u_0)$ on $[a, b]$.
 \item The map $u_0 \rightarrow u(\cdot; u_0)$ is Lipschitz in $u_0$.
 \item If $f$ is $C^k$ for $k \geq 1$, then
 \begin{enumerate}
@@ -508,15 +568,78 @@ $k = \infty$ and analyticity are allowed.
 \begin{proof}
 The essence of the proof is that we will write the IVP in integrated form, use the integrated form to construct a linear operator between Banach spaces, and then show that this operator is a uniform contraction.
 \begin{enumerate}
-\item By the fundamental theorem of calculus, if $u$ is differentiable, then
+\item First, we reformulate the problem as an integral equation. By the fundamental theorem of calculus, if $u$ is differentiable, then
 \begin{equation*}
 u(t) = u(0) + \int_0^t u'(\tau) d \tau
 \end{equation*}
 
 Thus $u(t)$ is a solution to the IVP \eqref{IVPp} if an only if it is a solution to the integral equation
+
 \begin{equation}\label{intform}
 u(t) = u(0) + \int_0^t f(u(\tau)) d \tau
 \end{equation}
+
+\item Next, we define some constants. Choose any $\tilde{u} \in \R^n$.
+Since $f$ is locally Lipschitz, we can find a radius $\delta > 0$ and a constant $L > 0$ such that for $u_1, u_2 \in B_{2 \delta}(\tilde{u})$,
+
+\begin{align*}
+|f(u_1) - f(u_2)| \leq L |u_1 - u_2|
+\end{align*}
+
+Since $f$ is continuous, let
+
+\[
+C = \sup \{ f(u) : u \in B_{2 \delta}(\tilde{u}) \}
+\]
+
+Finally, let
+
+\[
+B = B_\delta(\tilde{u})
+\]
+
+\item Now we define our Banach spaces. Consider the closed interval $[-r, r]$, where $r > 0$ is small and will be chosen later. We will show that our unique solution exists for $t \in [-r, r]$. Let
+
+\begin{align*}
+X = C^0([-r, r], \R^n)
+\end{align*}
+
+Equipped with the supremum norm, $X$ is a Banach space. Let $k(t) \in X$ be the constant function $\tilde{u}$, i.e.
+
+\begin{align*}
+k(t) &= \tilde{u} && t \in [-r, r]
+\end{align*}
+
+Finally, let $D$ be the closed ball in $X$ of radius $2 \delta$ about $k(t)$, i.e.
+
+\begin{align*}
+D = \{ u \in X : \sup_{t \in [-r,r]} | u(t) - \tilde{u} | \leq 2 \delta \}
+\end{align*}
+
+\item Next, we define our mapping. Define $F: D \times B \rightarrow X$ by
+
+\begin{align}\label{defF}
+[F(u, u_0)](t) = u_0 + \int_0^t f(u(\tau)) d \tau
+\end{align}
+
+As we noted above, a fixed point of $F$ is a solution to the IVP \eqref{IVPp}. Since $f$ is at least continuous, it is clear that the RHS of \eqref{defF} is in $X$.
+
+\item Show that for sufficiently small $r$, $F: D \times B \rightarrow D$, i.e. the RHS of \eqref{defF} is actually in $D$. For $u \in D$, $u_0 \in B$,
+
+\begin{align*}
+\sup_{|t| \leq r} |F(u, u_0) - \tilde{u}| &= 
+\sup_{|t| \leq r} \left|u_0 + \int_0^t f(u(\tau)) d\tau - \tilde{u}\right| \\
+&\leq |u_0 - \tilde{u}| - \sup_{|t| \leq r} \int_0^t |f(u(\tau))| d \tau \\
+\end{align*}
+
+Since $u \in D$, $u(\tau) \in B_{2 \delta}(\tilde{u})$ for all $\tau \in [-r, r]$, thus $|f(u(\tau)| \leq C$ for all $\tau \in [-r, r]$. Using this and the fact that , we have
+
+\begin{align*}
+\sup_{|t| \leq r} |F(u, u_0) - \tilde{u}|
+&\leq \delta - \sup_{|t| \leq r} \int_0^t |f(u(\tau))| d \tau \\
+\end{align*}
+
+
 
 
 
