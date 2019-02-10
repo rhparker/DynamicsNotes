@@ -41,24 +41,24 @@
 
 The Banach Fixed Point Theorem not only guarantees the existence of a unique fixed point of a function, but lets us actually compute it by successive approximations. As motivation, consider Newton's Method for root finding.\\
 
-Newton's Method is used to find zeros of a differentiable, real-valed function.
+Newton's Method is used to find zeros of a differentiable, real-valed function $f(x)$. It goes as follows.
 
 \begin{enumerate}[(i)]
-\item Start with an initial guess $x_0$
+\item Start with an initial guess $x_0$ (ideally near an actual zero of $f$)
 \item Iterate the algorithm $x_{n+1} = x_n - f(x_n)/f'(x_n)$. This is where the tangent line of $f$ at $(x_n, f(x_n)$ hits the $x-$axis.
 \item ????
 \item PROFIT
 \end{enumerate}
 
-Ideally, this method should converge to a unique zero of $f$, which is hopefully the zero near the initial guess. Define a ``Newton function'' $g$ by
+We would like this method to converge to a unique zero of $f$, which we hope is the zero near the initial guess. Define a ``Newton function'' $g$ by
 
 \[
 g(x) = x - \frac{f(x)}{f'(x)}
 \]
 
-If $x$ is a fixed point of $g$, i.e. $g(x) = x$, then (as long as $f'(x) \neq 0$), $f(x) = 0$. We would like Newton's Method to converge to a fixed point of the Newton function $g$. \\
+If $x$ is a fixed point of $g$, i.e. $g(x) = x$, then (as long as $f'(x) \neq 0$), $f(x) = 0$. We would to show that a fixed point of $g$ exists, and that Newton's Method converges to it. \\
 
-It turns out that criterion we will need is that the map $g$ is a contraction.\\
+It turns out that criterion we will need for this to work is that the map $g$ is a contraction.\\
 
 \begin{definition}Let $D$ be a subset of a normed vector space $(X, |\cdot|)$. Then $F: D \rightarrow D$ is a \emph{contraction} if there exists a constant $L$ with $0 < L < 1$ such that 
 \[
@@ -119,13 +119,57 @@ As with many proofs involving Banach spaces, the idea is to construct a Cauchy s
 \end{proof}
 \end{theorem}
 
-As a consequence of this, we will prove the inverse function theorem. For motivation, we will look at the one-dimensional case. Suppose $f: \R \rightarrow \R$ is continuously differentiable at $x = a$. Then we know from calculus that if $f'(a) \neq 0$, $f$ is invertible in a neigborhood of $a$. This makes sense, since if $f'$ is continuous and $f'(a) \neq 0$, $f$ is strictly increasing or strictly decreasing in a neighborhood of $a$, and so we can read the inverse off of the graph of $f$ near $a$. Using the chain rule on $f^{-1}(f(x)) = x$ at $x = a$, if $b = f(a)$, then
+Since we discussed Newton's method above, let's revisit that using the contraction mapping theorem. We prove the following lemma, which gives us a criterion for when Newton's method converges.
+
+% lemma : Newton's method convergence
+
+\begin{lemma}
+Let $f: [a, b] \rightarrow \R$ be $C^2$. Suppose for some $x \in [a, b]$ that $f(x) = 0$ and $f'(x) \neq 0$. Then there exists an interval $I = [x - \delta, x + \delta] \subset [a, b]$ such that Newton's method converges to $x$ starting at any $x_0 \in I$.
+\begin{proof}
+Define the ``Newton function''
+\[
+g(x) = x - \frac{f(x)}{f'(x)}
+\]
+We will show that there is an interval containing $x$ on which $g$ is a contraction. For some $\delta > 0$ to be chosen later, let $I = [x - \delta, x + \delta ] \subset [a, b]$. Then for any $y_1, y_2 \in I$, since $g$ is continuously differentiable, by the mean value theorem
+
+\begin{align*}
+|g(y_1) - g(y_2)| \leq \sup_{y \in I} |g'(y)| \: |y_1 - y_2|
+\end{align*}
+
+So all we have to do is choose $\delta$ sufficiently small to control $g'(y)$. Evaluating $g(y)$, we have
+
+\[
+g'(y) = 1 - \frac{f'(y)^2 - f(y)f''(y)}{f'(y)^2} = \frac{f(y)f''(y)}{f'(y)^2}
+\]
+
+Now comes the technical part. Since $f$, $f'$, and $f''$ are continuous, $f(x) = 0$, and $f'(x) ]\neq 0$, choose $\delta$ sufficiently small so that for all $y \in I$,
+\begin{enumerate}[(i)]
+	\item $|f'(y)| \geq \frac{1}{2}|f'(x)|$ 
+	\item $|f''(y)| \leq \frac{3}{2}|f''(x)|$
+	\item $|f(y)| \leq \frac{|f'(x)|}{6 |f''(x)}$
+\end{enumerate}
+
+Then for all $y \in I$
+
+\begin{align*}
+|g(y_1) - g(y_2)| &\leq 
+\left( \frac{|f'(x)|}{6 |f''(x)} \frac{3}{2}|f''(x)| \frac{2}{|f'(x)|}\right)|y_1 - y_2| \\ 
+&\leq \frac{1}{2}|y_1 - y_2| 
+\end{align*}
+
+Thus the Newton map $g$ is a contraction on $I$, thus by the Banach Fixed Point Theorem, it has a unique fixed point $x^*$ in $I$. Since $x$ is also a fixed point of $g$ in $I$, by uniqueness we have $x^* = x$. Since Newton's method uses the technique of successive approximations as in the proof of the Banach Fixed Point Theorem, Newton's method must converge to $x$.
+
+\end{proof}
+\end{lemma}
+
+As another consequence of this, we will prove the inverse function theorem. For motivation, we will look at the one-dimensional case. Suppose $f: \R \rightarrow \R$ is continuously differentiable at $x = a$. Then we know from calculus that if $f'(a) \neq 0$, $f$ is invertible in a neigborhood of $a$. This makes sense, since if $f'$ is continuous and $f'(a) \neq 0$, $f$ is strictly increasing or strictly decreasing in a neighborhood of $a$, and so we can read the inverse off of the graph of $f$ near $a$. Using the chain rule on $f^{-1}(f(x)) = x$ at $x = a$, if $b = f(a)$, then
 
 \[
 (f^{-1})'(b) = \frac{1}{f'(a)}
 \]
 
-We would like to extend this idea to higher dimensions. We can actually prove this as a corollary of the Implicit Function Theorem once we have proved the Uniform Contraction Mapping Principle, but we can prove it directly here.\\
+We would like to extend this idea to higher dimensions. We can actually prove this as a corollary of the Implicit Function Theorem once we have proved the Uniform Contraction Mapping Principle, but we can prove it directly here. The proof here is for $\R^n$, and the nice part of this proof is that we compute the derivative directly from the definition rather than invoking another theorem.
+\\
 
 % inverse function theorem
 
@@ -349,9 +393,9 @@ where the last line holds since $F(\cdot; \mu)$ is Lipschitz with constant $L$ (
 
 By the Uniform Contraction Mapping Principle, for each $\mu \in D$ there a unique fixed point $Z(\mu)$ of $\Phi$. Since $F$ is $C^1$, $\Phi$ is continuous, thus the map $Z(\mu)$ is continuous.\\
 
-The only thing that remains is to show that $DG(\mu)$ exists and is equal to $Z(\mu)$. This is rather technical, so it will be omitted for now. (References will be provided at some point.)
+The only thing that remains is to show that $DG(\mu)$ actually exists and is equal to $Z(\mu)$. This is rather technical, so it will be omitted for now. (References will be provided at some point.)
 
-\item 
+\item For $k > 1$, keep repeating this.
 
 \end{enumerate}
 
@@ -368,74 +412,118 @@ Why does this fail at the left and right endpoints? Looking at the picture, it i
 
 We can now state and prove the implicit function theorem.
 
-\begin{theorem} 
+\begin{theorem}[Implicit Function Theorem]
 Let
 \begin{enumerate}
 \item $X$, $Y$, $Z$ Banach spaces
 \item $U \subset X$, $V \subset Y$ open sets
-\item $F: U \times V \rightarrow Z$ continuously differentiable
-\item $(x_0, y_0) \in X \times Y$ with $F(x_0, y_0) = 0$
-\item The total (Frechet) derivative $D_x(x_0, y_0): X \rightarrow Z$ has a bounded inverse
+\item $F: U \times V \rightarrow Z$ a $C^k$ map, $k \geq 1$
+\item $(x_0, y_0) \in U \times V$ with $F(x_0, y_0) = 0$
+\item The total (Frechet) derivative $D_X F(x_0, y_0): X \rightarrow Z$ has a bounded inverse
 \end{enumerate}
-Then
-\begin{enumerate}
-\item We can solve for $x$ as a function of $y$ near $(x_0, y_0)$. That is, there is a neighborhood $U_0 \times V_0 \subset U \times V$ of $(x_0, y_0)$ and a continuously differentiable function $f: V_0 \rightarrow U_0$ with $f(y_0) = x_0$ such that $F(x, y) = 0$ for $(x, y) \in U_0 \times V_0$ if and only if $x = f(y)$.
-
-\item If $F$ is $C^k(U \times V, Z)$ (or analytic) in a neighborhood of $(x_0, y_0)$, then $f is C^k(V_0,X)$ (or analytic) in a neighborhood of $y_0$.
-\end{enumerate}
+Then we can solve for $x$ as a function of $y$ near $(x_0, y_0)$. That is, there is a neighborhood $U_0 \times V_0 \subset U \times V$ of $(x_0, y_0)$ and a unique $C^k$ function $f: V_0 \rightarrow U_0$ with $f(y_0) = x_0$ such that $F(x, y) = 0$ for $(x, y) \in U_0 \times V_0$ if and only if $x = f(y)$. Furthermore, the derivative of $f$ satisfies
+\[
+Df(y) = -D_X F(f(y),y)^{-1} D_Y F(f(y),y)
+\]
 
 \begin{proof}
 \begin{enumerate}
-\item Since $D_x(x_0, y_0)$ is invertible, define $L: Z \rightarrow X$ by $Lz = [D_x(x_0, y_0)]^{-1}z$. 
-\item Define the map $G: U \times V \rightarrow X$ by 
+\item First, we define a ``Newton map''. Since $D_X F(x_0, y_0)$ is invertible, define the map $G: U \times V \rightarrow X$ by 
 \begin{equation}\label{defG}
-G(x, y) = x - L F(x, y)
+G(x, y) = x - [D_X F(x_0, y_0)]^{-1} F(x, y)
 \end{equation}
-Since $F$ is $C^1$, $G$ is $C^1$ as well, and
+Note that this looks a lot like the map use use for Newton's method, except the derivative is always evaluated at $(x_0, y_0)$. For fixed $y \in V$, note that $G(x, y) = x$ if and only if $F(x, y) = 0$. Since $F$ is $C^k$, $G$ is $C^k$ as well, and
 
 \[
-DG_x(x, y) = I - L \: DF_x(x, y)
+DG_X(x, y) = I - [D_X(x_0, y_0)]^{-1} \: DF_X(x, y)
 \]
 
-In particular, $DG_x(x_0, y_0) = 0$.
+In particular, $DG_X(x_0, y_0) = 0$.
 
-\item $F(x, y) = 0$ if an only if $G(x, y) = x$, i.e. $x$ is a fixed point of $G$. We will show that $G$ is a uniform contraction on a neighborhood of $(x_0, y_0)$. 
+\item Next, we will show that $G$ is a uniform contraction on a neighborhood of $(x_0, y_0)$. We do this in several steps.
 
-\item Since $DG_x(x, y)$ is continuous and $DG_x(x_0, y_0) = 0$, we can find open balls $U_0 = B(x_0, \delta)$ and $V_0 = B(y_0, \epsilon)$ such that for $(x, y) \in \overline{U_0} \times V_0$,
+\item First, we control $DG_X(x, y)$ near $(x_0, y_0)$. Since $DG_X(x, y)$ is continuous and $DG_X(x_0, y_0) = 0$, we can find open balls $U_0 = B(x_0, \delta)$ and $V_0 = B(y_0, \epsilon)$ such that for $(x, y) \in \overline{U_0} \times V_0$,
 
 \[
-||DG_x(x, y)|| < \frac{1}{2} 
+||DG_X(x, y)|| < \frac{1}{2} 
 \]
 
-\item Since the map $y \rightarrow F(x_0, y)$ is continuous in $y$ and $F(x_0, y_0) = 0$, we can (if needed) decrease $\epsilon$ so that for $y \in V_0$
+\item Next, we control $F(x_0, y)$ near $(x_0, y_0)$. For convenience, let $L = [D_X(x_0, y_0)]^{-1}$. Since the map $y \rightarrow F(x_0, y)$ is continuous in $y$ and $F(x_0, y_0) = 0$, we can (if needed) decrease $\epsilon$ so that for $y \in V_0$
 
 \[
 |F(x_0, y)| \leq \frac{\delta}{2 ||L||}
 \]
 
-\item Next, we show that $G: \overline{U_0} \times V_0 \rightarrow \overline{U_0}$. By the triangle inequalty and the mean value inequality, for $x \in \overline{U_0}$
+\item Next, we show that $G: \overline{U_0} \times V_0 \rightarrow \overline{U_0}$. By the triangle inequalty and the mean value inequality, for $x \in \overline{U_0}$ and $y \in V_0$,
 
 \begin{align*}
 |G(x, y) - x_0| &\leq |G(x, y) - G(x_0, y)| + |G(x_0, y) - x_0| \\
 &\leq \sup_{x\in \overline{U_0}}||DG_x(x, y)||\:|x - x_0| + |x_0 - L F(x_0, y) - x_0 | \\
-&\leq \frac{1}{2} |x - x_0| + |L F(x_0, y)| \\
+&< \frac{1}{2} |x - x_0| + |L F(x_0, y)| \\
 &\leq \frac{\delta}{2} + ||L|| \frac{\delta}{2 ||L||} \\
 &\leq \delta
-\end{align*}
-
-Thus we have shown that $G: \overline{U_0} \times V_0 \rightarrow \overline{U_0}$. 
+\end{align*} 
 
 \item Finally, we show that $G$ is a uniform contraction. This holds by the mean value inequality, since for $x_1, x_2 \in \overline{U_0}$ and any $y \in V_0$,
 
 \[
 |G(x_1, y) - G(x_2, y)| \leq \sup_{x\in \overline{U_0}}||DG_x(x, y)||\:|x_1 - x_2| \leq \frac{1}{2}|x_1 - x_2|
 \]
-\item Thus, by the Uniform Contraction Mapping Principle, there is a unique $C^1$ function $f: V_0 \rightarrow U_0$ which maps $y \in V_0$ to the unique fixed point $x$ of $G(\cdot, y)$. Since $F(x, y) = 0$ if and only if $x$ is a fixed point of $G(\cdot, y)$, this implies that 
+\item Thus, by the Uniform Contraction Mapping Principle, there is a unique $C^k$ function $f: V_0 \rightarrow \overline{U_0}$ which maps $y \in V_0$ to the unique fixed point $x$ of $G(\cdot, y)$. In other words, $G(f(y),y) = f(y)$ for all $y \in V_0$. For all $y \in U_0$, since $f(y) \in \overline{U}$,
+
+\[
+|f(y) - x_0| = |G(f(y), y) - x_0| < \delta
+\]
+
+Thus, in fact, $f(y) \in U$, and so we can restrict the codomain of $f$ to $U_0$, i.e. $f: V_) \rightarrow U_0$.
+
+\item Since $F(x, y) = 0$ if and only if $x$ is a fixed point of $G(\cdot, y)$, this implies that 
 	\begin{enumerate}
 	\item $f(y_0) = x_0$
 	\item For $(x, y) \in U_0 \times V_0$, $F(x, y) = 0$ if and only if $x = f(y)$
 	\end{enumerate}
+
+\item To compute the derivative of $f$, use the chain rule on $F(f(y), y) = 0$.
+
+\begin{align*}
+0 &= D_X F(f(y),y)Df(y) + D_Y F(f(y),y)
+\end{align*}
+
+Since $F$ is at least $C^1$, $D_X F(f(y),y)$ is invertible on $U \times V$, thus we can rearrange and multiply by $D_X F(f(y),y)^{-1}$ to get
+
+\[
+Df(x) = -D_X F(f(y),y)^{-1} D_Y F(f(y),y)
+\]
+
 \end{enumerate}
+\end{proof}
+\end{theorem}
+
+We can now prove the Banach space version of the inverse function theorem as a corollary of the implicit function theorem. We include it here for completeness.
+
+\begin{theorem}[Implicit Function Theorem]
+Let
+\begin{enumerate}
+\item $X$, $Y$ Banach spaces
+\item $U \subset X$, $V \subset Y$ open sets
+\item $F: U \rightarrow Z$ a $C^k$ map with $F(x_0) = y_0$
+\item The total derivative $D F(x_0)$ has a bounded inverse
+\end{enumerate}
+Then we can invert $F$ near $y_0$. That is, there exist neighborhoods $U_0 \subset U$ of $x_0$and $V_0 \subset V$ of $y_0$ and a unique $C^k$ function $F^{-1}: V_0 \rightarrow U_0$ such that $F(F^{-1}(y)) = y$ for all $y \in V_0$ and $F^{-1}(F(x)) = x$ for all $x \in U_0$. Furthermore, the derivative of $F^{-1}$ satisfies
+\[
+DF^{-1}(y) = D F( F^{-1}(y) )^{-1}
+\]
+
+\begin{proof}
+Let $G(x,y) = F(x) - y$. For all $y$, $D_X G(x,y) = D F(x)$, thus $D_X G(x_0, y_0) = D F(x_0)$ has a bounded inverse. Thus by the Implicit Function Theorem, there exists a neighborhood $U_0 \times V_0 \subset U \times V$ of $(x_0, y_0)$ and a unique $C^k$ function $h: V_0 \rightarrow U_0$ with $h(y_0) = x_0$ such that $G(h(y), y) = 0$ for all $y \in V_0$. In other words, $F(h(y)) = y$ for all $y \in V_0$. This implies $h$ is injective. If we redefine $U_0$ to be $U_0 \cap h^{-1} V_0$ (which is open since $h$ is continuous), $h$ is bijective. Thus $h$ is the inverse function $F^{-1}: V_0 \rightarrow U_0$ that we seek. For the derivative of $F^{-1}$, from the implicit function theorem we have
+
+
+\begin{align*}
+DF^{-1}(y) &= -D_X G(F^{-1}(y),y)^{-1} D_Y F(F^{-1}(y),y) \\
+&= -[D F( F^{-1}(y) )^{-1}] (-1) \\
+&= D F( F^{-1}(y) )^{-1}
+\end{align*}
+
 \end{proof}
 \end{theorem}
 
@@ -526,7 +614,7 @@ Consider the initial value problem on $\R^n$
 \frac{du}{dt} &= f(u) \\
 u(t_0) &= u_0 \nonumber
 \end{align}
-If $f$ is continuous in a neighborhood of $(t_0, u_0)$, then there exists at least one solution $u(t)$ defined in a neighborhood of t0. There is no guarantee of uniqueness.
+If $f$ is continuous in a neighborhood of $(t_0, u_0)$, then there exists at least one solution $u(t)$ defined in a neighborhood of $t_0$. There is no guarantee of uniqueness.
 \begin{proof}
 A sketch of the proof on $\R$ goes as follows.
 \begin{enumerate}
@@ -550,7 +638,7 @@ Consider the initial value problem on $\R^n$
 \frac{du}{dt} &= f(u) \\
 u(0) &= u_0 \nonumber
 \end{align}
-Suppose that $f$ is locally Lipschitz, i.e. for every $\tilde{u} \in \R^n$ there exists a radius $\delta$ and a Lipschitz constant $L$ (both depending on $v$) such that for all $u_1, u_2 \in B(\tilde{u}, \delta)$,
+Suppose that $f$ is locally Lipschitz, i.e. for every $\tilde{u} \in \R^n$ there exists a radius $\delta$ and a Lipschitz constant $L$ (both depending on $\tilde{u}$) such that for all $u_1, u_2 \in B(\tilde{u}, \delta)$,
 \[
 |f(u_1) - f(u_2)| \leq L|u_1 - u_2|
 \]
@@ -563,10 +651,10 @@ Then for every $\tilde{u} \in \R^n$ there exists a radius $\delta$ and a time in
 \item The solution $u(t; u_0)$ is $C^{k+1}$ in $t$
 \item The map $u_0 \rightarrow u(\cdot; u_0)$ is $C^k$ in $u_0$
 \end{enumerate}
-$k = \infty$ and analyticity are allowed.
+Note that $k = \infty$ and analyticity are allowed.
 \end{enumerate}
 \begin{proof}
-The essence of the proof is that we will write the IVP in integrated form, use the integrated form to construct a linear operator between Banach spaces, and then show that this operator is a uniform contraction.
+The essence of the proof is that we will write the IVP in integrated form, use the integrated form to construct a linear operator between Banach spaces, show that this operator is a uniform contraction, and then apply the Uniform Contraction Mapping Principle.
 \begin{enumerate}
 \item First, we reformulate the problem as an integral equation. By the fundamental theorem of calculus, if $u$ is differentiable, then
 \begin{equation*}
@@ -579,26 +667,25 @@ Thus $u(t)$ is a solution to the IVP \eqref{IVPp} if an only if it is a solution
 u(t) = u(0) + \int_0^t f(u(\tau)) d \tau
 \end{equation}
 
-\item Next, we define some constants. Choose any $\tilde{u} \in \R^n$.
-Since $f$ is locally Lipschitz, we can find a radius $\delta > 0$ and a constant $L > 0$ such that for $u_1, u_2 \in B_{2 \delta}(\tilde{u})$,
+\item Next, we define some constants. Choose any $\tilde{u} \in \R^n$. Since $f$ is locally Lipschitz, we can find a radius $\delta > 0$ and a constant $L > 0$ such that for $u_1, u_2 \in B_{2 \delta}(\tilde{u})$,
 
 \begin{align*}
 |f(u_1) - f(u_2)| \leq L |u_1 - u_2|
 \end{align*}
 
-Since $f$ is continuous, let
+Since $f$ is continuous, is is bounded in this ball, so let
 
 \[
 C = \sup \{ f(u) : u \in B_{2 \delta}(\tilde{u}) \}
 \]
 
-Finally, let
+Finally, for convenience, let
 
 \[
 B = B_\delta(\tilde{u})
 \]
 
-\item Now we define our Banach spaces. Consider the closed interval $[-r, r]$, where $r > 0$ is small and will be chosen later. We will show that our unique solution exists for $t \in [-r, r]$. Let
+\item Now we define our Banach spaces. Consider the closed interval $[-r, r]$, where $r > 0$ is small and will be chosen later. We will show that we have a unique solution for $t \in [-r, r]$. Let
 
 \begin{align*}
 X = C^0([-r, r], \R^n)
@@ -610,13 +697,13 @@ Equipped with the supremum norm, $X$ is a Banach space. Let $k(t) \in X$ be the 
 k(t) &= \tilde{u} && t \in [-r, r]
 \end{align*}
 
-Finally, let $D$ be the closed ball in $X$ of radius $2 \delta$ about $k(t)$, i.e.
+Finally, let $D$ be the closed ball in $X$ of radius $2 \delta$ about the constant function $k(t)$, i.e.
 
 \begin{align*}
 D = \{ u \in X : \sup_{t \in [-r,r]} | u(t) - \tilde{u} | \leq 2 \delta \}
 \end{align*}
 
-\item Next, we define our mapping. Define $F: D \times B \rightarrow X$ by
+\item Next, we define our mapping between Banach spaces. Define $F: D \times B \rightarrow X$ by
 
 \begin{align}\label{defF}
 [F(u, u_0)](t) = u_0 + \int_0^t f(u(\tau)) d \tau
@@ -629,22 +716,144 @@ As we noted above, a fixed point of $F$ is a solution to the IVP \eqref{IVPp}. S
 \begin{align*}
 \sup_{|t| \leq r} |F(u, u_0) - \tilde{u}| &= 
 \sup_{|t| \leq r} \left|u_0 + \int_0^t f(u(\tau)) d\tau - \tilde{u}\right| \\
-&\leq |u_0 - \tilde{u}| - \sup_{|t| \leq r} \int_0^t |f(u(\tau))| d \tau \\
+&\leq |u_0 - \tilde{u}| + \int_0^r |f(u(\tau))| d \tau \\
 \end{align*}
 
-Since $u \in D$, $u(\tau) \in B_{2 \delta}(\tilde{u})$ for all $\tau \in [-r, r]$, thus $|f(u(\tau)| \leq C$ for all $\tau \in [-r, r]$. Using this and the fact that , we have
+Since $u \in D$, $u(\tau) \in B_{2 \delta}(\tilde{u})$ for all $\tau \in [-r, r]$, thus $|f(u(\tau)| \leq C$ for all $\tau \in [-r, r]$. Thus we have
 
 \begin{align*}
 \sup_{|t| \leq r} |F(u, u_0) - \tilde{u}|
-&\leq \delta - \sup_{|t| \leq r} \int_0^t |f(u(\tau))| d \tau \\
+&< \delta + C r \delta \\
 \end{align*}
 
+If we take $r \leq \delta/C$, we have $\sup_{|t| \leq r} |F(u, u_0) - \tilde{u}| < 2 \delta$, which is what we want.
 
+\item Show that for sufficiently small $r$, $F$ is a contraction. For $u, v \in D$ and $u_0 \in B$, 
 
+\begin{align*}
+\sup_{|t|\leq r}&|F(u, u_0) - F(v, u_0)| \\
+&=\sup_{|t|\leq r} \left| u_0 + \int_0^t f(u(\tau)) d \tau - \left(u_0 + \int_0^t f(v(\tau)) d \tau \right) \right| \\
+&\leq \sup_{|t|\leq r} \int_0^t | f(u(\tau)) - f(v(\tau))| d \tau \\
+&\leq L r \sup_{|t|\leq r} |u(t) - v(t)| \\
+&\leq L r ||u - v||
+\end{align*}
 
+If we take $r \leq 1/2L$, $F$ is a contraction. Thus if we choose $r = \min\{ \delta/C, 1/L\}$, we are all set!
+
+\item Show that the map $F$ is uniformly Lipshitz in the initial condition $u_0$. For $u_0, u_1 \in B$,
+
+\begin{align*}
+|F(u, u_0) - F(u, u_1)| = |u_0 - u_1| \leq |u_0 - u_1|
+\end{align*} 
+
+Thus $F$ is uniformly Lipschitz in $u_0$ with Lipschitz constant 1.
+
+\item Finally, we show that $F$ is $C^k$ (in both variables) whenever $f$ is $C^k$. Since $F$ is linear in $u_0$, $F$ is smooth in $u_0$, thus it remains to show that $F(\cdot, u_0)$ is $C^k$.\\ 
+We will show that $F(\cdot, u_0)$ is $C^1$ if $f$ is $C^1$. Let $u(t) \in D$. We make an educated guess that the Frechet (partial) derivative at $u(t)$ is $L(h(t)) = \int_0^t Df(u(\tau)) h(\tau) d \tau$. This makes sense, since this is more-or-less differentiating under the integral. By the properties of integration, $L$ is a linear operator, and it is bounded since $f$ is $C^1$. Using the definition of the Frechet derivative,
+
+\begin{align*}
+\frac{||F(u + h) - F(u) - L(h) ||}{||h||} 
+&\leq \frac{1}{||h||}
+\sup_{|t| \leq r} \left| \int_0^t [ f(u(\tau) + h(\tau)) - f(u(\tau))] d\tau - \int_0^t Df(u(\tau)) h(\tau) d \tau \right| \\
+&= \frac{1}{||h||}
+\sup_{|t| \leq r} \left| \int_0^t [ f(u(\tau) + h(\tau)) - f(u(\tau)) - Df(u(\tau))h(\tau)] d\tau\right| \\
+&\leq \int_0^r \frac{ | f(u(\tau) + h(\tau)) - f(u(\tau)) - Df(u(\tau))h(\tau)|}{|h(\tau)|} d\tau
+\end{align*}
+
+as $||h|| \rightarrow 0$, $|h(\tau)| \rightarrow 0$, thus the RHS of this goes to 0 since $f$ is continuously differentiable and we are on a closed interval $[0, r]$. We can repeat this to conclude that $F$ is $C^k$.
+
+\item We have now satisfied the hypotheses of the Uniform Contraction Mapping Principle. Thus there exists a $C^k$ map $G: B \rightarrow D$ which associates maps each initial condition $u_0$ to the unique fixed point of $F(\cdot; u_0)$, which is the unique solution $u(\cdot; u_0)$ to \eqref{IVPp}. 
+
+\item Finally, the solution $u(\cdot; u_0)$ is $C^{k+1}$ whenever $f$ is $C^k$. Since we now know that $u(t)$ is a solution to the IVP, this follows from repeatedly differentiating $\frac{du(t)}{dt} = f(u(t))$.
 
 \end{enumerate}
 \end{proof}
 \end{theorem}
+
+Note that in the previous theorem, we always took the initial time to be 0. Since the function $f(u)$ in \eqref{IVPp} does not depend on $t$, if we are given an initial condition at time $t_0$, we can always translate the system so that we start at $t = 0$. In other words, if we take the two systems
+
+\begin{align*}
+(i)\begin{cases}
+\dot{u} = f(u) \\
+u(0) = u_0
+\end{cases}&&
+(ii)\begin{cases}
+\dot{v} = f(v) \\
+v(t_0) = u_0
+\end{cases}
+\end{align*}
+
+where $f$ is locally Lipschitz, then if $v(t)$ is the unique solution to (ii) on $[t_0 - \epsilon, t_0 + \epsilon]$, then $u(t) = v(t+t_0)$ is the unique solution to (i) on $[-\epsilon, \epsilon]$.\\
+
+In some cases, however, we have a vector field $f$ which may depend on $t$ as well as on any number of parameters. In this case, we still can still prove an existence/uniqueness result; the choice of starting time $t_0$ will then be important.
+
+% theorem : parameter-dependent existence and uniqueness
+
+\begin{theorem}
+Let $f: \R^n \times \R^p \times \R \rightarrow \R^n$ be $C^k$ for $k \geq 1$, and consider the initial value problem
+
+\begin{align*}
+\dot{u} &= f(u, \mu, t) \\
+u(t_0) &= u_0
+\end{align*} 
+Then for each $(\tilde{u}_0, \tilde{\mu}_0, \tilde{t}_0)$, there exists constants $0 < \delta < d$ such that for each $(u_0, \mu_0, t_0)$ which is $\delta$-close to $(\tilde{u}_0, \tilde{\mu}_0, \tilde{t}_0)$, the IVP has a unique solution $u(t) = u(t; u_0, \mu_0, t_0)$ on the interval $[\tilde{t}_0 - d, \tilde{t}_0 + d]$.\\
+
+Furthermore, the map
+\[
+(u_0, \mu_0, t_0) \mapsto u(t; u_0, \mu_0, t_0)
+\]
+is $C^k$ in $(u_0, \mu, t_0)$.
+\begin{proof}
+There are several ways to approach this proof, which are only outlined here. First, it is possible to adapt the proof of the previous theorem to this case. Alternatively, we can reformulate the IVP as the augmented system
+\begin{align*}
+\frac{d}{dt}\begin{pmatrix}u \\ \nu \\ s \end{pmatrix}
+&= \begin{pmatrix}f(u, \nu, s) \\ 0 \\ 1 \end{pmatrix} &&
+\begin{pmatrix}u \\ \nu \\ s \end{pmatrix}(0) = 
+\begin{pmatrix}u_0 \\ \mu \\ t_0 \end{pmatrix}
+\end{align*}
+\end{proof}
+We can then apply the previous theorem.
+\end{theorem}
+
+Finally, we look at what happens when a solution approaches the boundary of the region where the solution exists. The following theorem shows that such a solution blows up at the boundary.
+
+% theorem : blow up at boundary
+
+\begin{theorem}
+Suppose $f: \R^n \rightarrow \R^n$ is $C^1$, and $u(t)$ satisfies the IVP
+
+\begin{align*}
+\dot{u} = f(u) \\
+u(0) = u_0 
+\end{align*}
+
+on an interval $[0, T)$, but there is no solution to the IVP on the interval $[0, T + \epsilon)$ for any $\epsilon > 0$. Then $u$ blows up as it approaches the boundary, i.e. $|u(t)| \rightarrow \infty$ as $t \rightarrow T$.
+
+\begin{proof}
+We employ a proof by contradiction.
+\begin{enumerate}
+\item Suppose this is not true. Then there is some sequence $t_n$ with $t_n \uparrow T$ such that $\{ u(t_n) \}$ remains bounded, i.e. there exists a constant $R$ such that $|u(t_n)| \leq K$ for all $n$.
+\item Since $\{ u(t_n) \}$ is a bounded sequence in $\R^n$, by Bolzano–Weierstrass it has convengent subsequence. Passing to this subsequence if needed, we may assume that $u(t_n) \rightarrow \tilde{u}$.
+\item Now consider an IVP with initial condition $u(\tau) = u_0$, i.e.
+\begin{align*}
+\dot{u} = f(u) \\
+u(\tau) = \tilde{u}
+\end{align*}
+Since the vector field $f$ does not depend on $t$, the existence theorem says that for every $\tau$, there is a unique solution $u(t; \tau)$ on the interval $[\tau - \epsilon, \tau + \epsilon]$. (These solutions are just translates of each other).
+\item Since $t_n \uparrow T$, $t_{n_0} > T - \epsilon/2$ for some integer $n_0$. Thus we have a solution $u(t; t_0)$ to the IVP on (at least) the interval $[t_{n_0}, T + \epsilon/2]$ with $u(t_{n_0}) = \tilde{u}$.
+\item By uniqueness, we can splice these solutions together since one of the stops at $\tilde{u}$ and the other one starts at $\tilde{u}$, i.e. we have the followings solution to the original IVP.
+\[
+v(t) = \begin{cases}
+u(t) & T \in [0, t_{n_0}] \\
+u(t; t_{n_0}) & T \in [t_{n_0}, T + \epsilon/2]
+\end{cases}
+\]
+Since this solution exists on a larger interval than $[0, T)$, we have a contradiction. Thus our original assumption must be false, i.e. the solution $u(t)$ must blow up as it hits the boundary.
+
+\end{enumerate}
+\end{proof}
+
+\end{theorem}
+
 
 \end{document}

@@ -1,0 +1,137 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{lipsum}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs,amsfonts,dsfont}
+\usepackage[shortlabels]{enumitem} 
+\newcounter{question}
+\setcounter{question}{0}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage{ esint }
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\def\noi{\noindent}
+\def\T{{\mathbb T}}
+\def\R{{\mathbb R}}
+\def\N{{\mathbb N}}
+\def\C{{\mathbb C}}
+\def\Z{{\mathbb Z}}
+\def\P{{\mathbb P}}
+\def\E{{\mathbb E}}
+\def\Q{\mathbb{Q}}
+\def\ind{{\mathbb I}}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\ran}{range}
+
+\title{Dynamics Notes 2}
+\author{Ross Parker}
+
+\begin{document}
+
+\section{Dynamical Systems}
+
+Consider the dynamical system on $\R^n$
+
+\begin{align*}
+\dot{u} &= f(u) \\
+u(0) &= u_0
+\end{align*}
+
+where $f: \R^n \rightarrow \R^n$ is sufficiently smooth (at least $C^1$ for our purposes). Assume that solutions exist for all ICs $u_0$ and all $t \in \R$ (we will address the issue of global existence at a later point).\\
+
+We define the flow of the dynamical system as follows.
+
+\section{Lyapunov Functions}
+
+Recall the definitions of stabiltiy for an equilibrium point $u^*$ of a dynamical system.
+
+\begin{enumerate}
+\item An equilibrium point $u^*$ is \emph{stable} if trajectories that start close stay close. In precise mathematical terms, for every $\epsilon > 0$ there exists $\delta > 0$ such that for every initial condition $u_0 \in B(u_0, \delta)$, the trajectory $\Phi_t(u_0) \in B(u_0, \epsilon)$ for all $t \geq 0$. 
+\item An equilibrium point $u^*$ is \emph{asymptotically stable} if it is stable and trajectories that start close approach it as $t \rightarrow \infty$. In other words, for every $\epsilon > 0$ there exists $\delta > 0$ such that (i) the stability definition applies; and (ii) for every initial condition $u_0 \in B(u_0, \delta)$, $d(\Phi_t(u_0), u^*) \rightarrow 0$ as $t \rightarrow \infty$.
+\end{enumerate}
+
+In general, there is no good way to determine if an equilibrium point is stable or asymptotically stable. However, we have a few tools which can do the job. One such tool is the Lyapunov function. The idea is that we can determine the behavior of trajectories near an equilibrium point without actually solving the governing ODE.\\
+
+The idea is as follows. Consider a flow $\phi_t$ on the plane. (This works in higher dimensions as well, but I cannot visualize things in more than three dimensions.) Imagine that the flow represents a ball rolling around the plane. The dynamical system gives the rules that tell us how the ball rolls. Now suppose we associate an energy with every point in the plane, so now we have a three-dimensional energy landscape. Suppose the rules now dictate that the ball must always flow downhill in this energy landscape. Then any local minimum, or ``well'', of the energy must be an asymptotically stable equilibrium point. There is no escaping the well.\\
+
+Now we make this idea mathematically precise. Consider the autonomous dynamical system
+
+\begin{align}\label{LyODE}
+\dot{u} &= f(u) && u \in \R^n, f \in C^1
+\end{align}
+
+We need the system to be autonomous so that the energy landscape remains constant in $t$. Let $u_0$ be an equilibrium point for \eqref{LyODE}, i.e. $f(u_0) = 0$. Then we define a Lyapunov function as follows. Think of the Lyapunov function as energy.\\
+
+\begin{definition}
+A $C^1$ function $V: U \subset \R^n \rightarrow \R$, where $U$ is an open set containing $u^*$ is a \emph{Lyapunov function} for \eqref{LyODE} at the equilibrium point $u^*$ if
+\begin{enumerate}[(i)]
+\item $V(u_0) = 0$
+\item $V(u) > 0$ for $u \neq u_0$
+\item $\dot{V} = \langle \nabla V(u(t)), \dot{u} \rangle = \langle \nabla V(u(x)), f(u) \rangle \leq 0$ 
+(energy cannot increase with time)
+\end{enumerate}
+The function $V$ is a \emph{strict Lyapunov funcion} if, in addition,
+\begin{enumerate}[(i)]
+\setcounter{enumi}{3}
+\item $\dot{V} < 0$ for $u \neq u_0$ (energy strictly decreases with time)
+\end{enumerate}
+\end{definition} 
+
+We have the following theorem.
+
+% Theorem : Lyapunov Stability
+
+\begin{theorem}[Lyapunov Stability Theorem]
+If there is Lyapunov function $V$ defined in an open neighborhood of an equilibrium point $u^*$ of \eqref{LyODE}, then $u^*$ is stable. If $V$ is a strict Lyapunov function, then $u^*$ is asymptotically stable.
+\end{theorem}
+\begin{proof}
+The idea of the proof is as follows. For simplicity, suppose we are in the plane. Suppose the levels sets of $V$ are concentric rings around $u^*$. Take our initial condition $u_0$ on one of the rings, e.g. on the level set $\{V(u) = c\}$. Then the condition $\dot{V} \leq 0$ means that the trajectory starting at $u_0$ either stays on the ring $\{V(u) = c\}$ or moves to a more inner ring, thus $u^*$ is stable. The condition $\dot{V} < 0$ means the trajectory must always move to a more inner ring as time increases, thus $u^*$ is asymptotically stable. Of course, the level sets of $V$ are not, in general, concentric rings, so we will have to be more careful. The proof below is adapted from Chicone (2006).
+
+\begin{enumerate}
+	\item Let $\epsilon > 0$ be sufficiently small so that $B(u^*, \epsilon) \subset U$, where $U \subset \R^n$ is the domain of the Lyapunov function $V$.
+
+	\item Consider $\partial B(u^*, \epsilon)$, the boundary of the $\epsilon-$ball around $u^*$. Since $\partial B(u^*, \epsilon)$ is compact, $V$ must attain an absolute minimum $M > 0$ at a point $u_M$ on it, and this minimum cannot be 0 since, by the definition of a Lyapunov function, $V(u) > 0$ everywhere on $U$ except for $u^*$. Thus $V(u) \geq M$ on $\partial B(u^*, \epsilon)$. 
+
+	\item Since $V$ is continuous and $V(u^*) = 0$, we can find $\delta > 0$ such that $V(u) \leq M/2$ for $u \in \overline{B}(u^*, \delta)$. Note that we must have $\delta < \epsilon$, since otherwise the point $u_M$ would be in $\overline{B}(u^*, \delta)$, and $V(u_M) = M$.
+
+	\item Let $\Phi_t$ denote the flow of $\eqref{LyODE}$. Take an initial condition $u_0 \in B(u^*, \delta)$. Then from the definition of a Lyapunov function, 
+
+	\begin{align*}
+	\frac{d}{dt} V(\Phi_t(u_0)) 
+	&= \langle \nabla V(\Phi_t(u_0)), \frac{d}{dt} \Phi_t(u_0) \rangle \\
+	&= \langle \nabla V(\Phi_t(u_0)), f(\Phi_t(u_0)) \rangle \\
+	&\leq 0
+	\end{align*}
+
+	Thus the function $V(\Phi_t(u_0))$ is nondecreasing in $t$. Since $V(\Phi_0(u_0)) = V(u_0) \leq M/2 < M$ for all $u_0 \in B(u^*, \delta)$, it must be the case that $V(\Phi_t(u_0)) \leq M/2 < M$ for all $t \geq 0$, so long at the flow $\Phi_t(u_0)$ is defined. 
+
+	\item Next, we show that, as long at it is defined, the solution $\Phi_t(u_0)$ must stay within the open ball $B(u^*, \epsilon)$. If not, since trajectories are continuous, $\Phi_T(u_0)$ must hit the ball boundary $\partial B(u^*, \epsilon)$ at some time $T > 0$. Since $M$ is the minimum value of $V$ on this ball, we have $V( \Phi_T(u_0) ) \geq M$, which contradicts what we showed above.
+
+	\item Finally, we show that the flow $\Phi_t(u_0)$ is defined for all $t \geq 0$. By the Extension Theorem, $\Phi_t(u_0)$ can fail to exist for some $t > 0$ only in two ways: (i) the solution $\Phi_t(u_0)$ blows up in finite time, or (ii) the solution $\Phi_t(u_0)$ approaches the boundary of definition of $f$. (i) cannot happen, since we showed that all solutions are trapped inside $B(u^*, \epsilon)$. (ii) cannot happen, since $f$ is defined for all $u \in \R^n$.
+	
+	\item We have shown that for all ICs $u_0 \in B(u^*, \delta)$, $\Phi_t(u_0) \in B(u^*, \epsilon)$ for all $t > 0$. Thus $u^*$ is stable.
+
+	\item Finally, we show that if $V$ is a strict Lyapunov function, $u^*$ is asymptotically stable. Suppose that $u^*$ is not asymptotically stable. Then we can find an initial condition $u_0 \in B(u^*, \delta)$ such that $\Phi_t(u_0)$ does not converge to $u^*$. Take any sequence of increasing times $0 \leq t_1 < t_2 < \cdots$ with $t_k \rightarrow \infty$, and note that all sequences $\{ \Phi_{t_k} u_0 \}$ are contained in the compact set $B(u^*, \epsilon)$. Since $\Phi_t(u_0)$ does not converge to $u^*$, we can find such a sequence of times so that $\Phi_{t_k} u_0 \rightarrow \tilde{u} \neq u^*$.
+
+	\item We will show this is impossible. Since $V$ is continuous, $V( \Phi_{t_k}(u_0) ) \rightarrow V(\tilde{u})$ as $k \rightarrow \infty$. Since $u_1 \neq u^*$, the function $V(\Phi_t(u_1))$ is strictly decreasing in $t$ since it is a strict Lyapunov function. This means that $V(\Phi_{t_k}(u_1)) > V(u_1)$ for all $k$. In addition, we have
+
+	\begin{align*}
+	\lim_{k\rightarrow \infty}V(\Phi_{1 + t_k}(u_0)) 
+	= \lim_{k\rightarrow \infty}V(\Phi_1(\Phi_{t_k}(u_0)))
+	= V(\Phi_1(u_1)) < V(u_1)
+	\end{align*}
+
+	This means that for all $k \geq K_0$, $V(\Phi_{1 + t_k}(u_0)) < V(u_1)$. But since $t_k \rightarrow \infty$, we can find $K \in \N$ with $t_K \geq k_0$. Thus we have $V(\Phi_{t_K}(u_1)) < V(u_1)$, which is a contradiction. We conclude that $u^*$ must be asymptotically stable.
+
+\end{enumerate}
+\end{proof}
+\end{document}
