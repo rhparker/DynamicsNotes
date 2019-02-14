@@ -50,7 +50,9 @@ where $f: \R^n \rightarrow \R^n$ is sufficiently smooth (at least $C^1$ for our 
 
 We define the flow of the dynamical system as follows.
 
-\section{Lyapunov Functions}
+\pagebreak
+
+\subsection{Lyapunov Functions}
 
 Recall the definitions of stabiltiy for an equilibrium point $u^*$ of a dynamical system.
 
@@ -134,4 +136,167 @@ The idea of the proof is as follows. For simplicity, suppose we are in the plane
 
 \end{enumerate}
 \end{proof}
+
+The take-home message is that if we have a Lyapunov function, there is a lot we can say about stability of an equilibrium point. The trick, however, is finding such a function in the first place. The unfortunate reality is that there is no tried-and-true method to find a Lyapunov function for a given system; it often is little more than (hopefully educated) guesswork. There are a few guidelines we can use, which we will discuss in the following examples.
+
+\begin{enumerate}
+
+\item Consider the two-dimensional ODE 
+
+\begin{align*}
+\dot{x} &= -xy^2 \\
+\dot{y} &= 3yx^2
+\end{align*}
+
+The origin is an equilibrium point, but the Jacobian matrix for the origin is the zero matrix, so Hartman-Grobman is of no use. Looking for a Lyapunov function seems like a good idea. A simple quadratic form is a good guess, since it is positive everywhere except for the origin. Let's try
+
+\[
+V(x, y) = 3x^2 + y^2
+\]
+
+The total derivative is 
+
+\begin{align*}
+\dot{V}(t) &= \langle DV(x, y), (x y^2, 3 y x^2) \rangle \\ 
+&= \langle DV(x, y), (-x y^2, 3 y x^2) \rangle \\
+&= \langle (6x, 2y), (-x y^2, 3 y x^2) \rangle \\
+&= 6 x^2 y^2 - 6 x^2 y^2 \\
+&= 0
+\end{align*}
+
+Thus the origin is stable.
+
+\item Another way to find Lyapunov functions is to use conservation of energy. Consider the undamped harmonic oscillator $\ddot{x} + \omega^2 x = 0$ for $\omega > 0$, which we can write as the first-order system
+
+\begin{align*}
+\dot{x} &= y \\
+\dot{y} &= -\omega^2 x
+\end{align*}
+
+The origin is an equlibrium point. Since the equation is linear, we have eigenvalues $\pm \sqrt{-\omega^2} = \pm i \omega$ for the Jacobian at the origin, which is a linear center. If we want to use a Lyapunov function, a natural choice is the energy of the system, which in this case is the sum of kinetic and elastic potential energy.
+
+\[
+E(x, y) = \frac{1}{2}y^2 + \frac{1}{2}\omega x^2
+\] 
+
+The origin is a zero of the energy, and it is conserved along trajectories of the system, since
+
+\begin{align*}
+\dot{V}(t) &= \langle (\omega^2 x, y), (y, -\omega^2 x) \rangle \\ 
+&= 0
+\end{align*}
+
+\item We can generalize this to gradient systems. Consider the system
+
+\[
+\dot{u} = -\nabla V(u)
+\]
+
+where $u \in \R^n$ and the potential function $V:\R^n \rightarrow \R \in C^2$. Then if a point $u_0$ is a strict local minimum of the potential, it is an equlibrium point and is stable.\\
+
+To this, note that since $u_0$ is a local minimum of $V$, this implies $\nabla V(u_0) = 0$, thus $u_0$ is an equilbrium point. Shift the potential $V$ to so that $V(u_0) = 0$ (which does not affect the system at all). Since
+
+\[
+\dot{V}(u) = \langle \nabla V(r), -\nabla V(u) \rangle 
+= -|\nabla V(u)|^2
+\]
+
+$\dot{V}(u_0) = 0$ and $\dot{V}(u) < 0$ near $u_0$ since $u_0$ is a local minimum of $V$. Thus $V$ is a strict Lyapunov function near $u_0$, and we conclude that $u_0$ is asymptotically stable.
+
+\item The more usual situation in physics is the force is the gradient of a potential $V$. Writing down Newton's laws for this situation an assuming the mass $m = 1$, we have for $u \in R^n$
+
+\[
+\ddot{u} = -\nabla V(u)
+\]
+
+As a first-order system, this becomes
+
+\begin{align*}
+\dot{u} &= v \\
+\dot{v} &= -\nabla V(u)
+\end{align*}
+
+Suppose that $u_0$ is a strict local minimum of the potential $V$, and without loss of generality take $V(u_0) = 0$. Then $(u, v) = (u_0, 0)$ is an equilbrium point of the system. The energy is given by the sum of kinetic and potential energy, which is
+
+\[
+E(u, v) = \frac{1}{2} v^2 + V(u)
+\]
+The energy is conserved, since
+
+\begin{align*}
+\dot{E}(u, v) &= \langle (\nabla V(u), v), (v, -\nabla V(u) ) \rangle = 0
+\end{align*}
+
+Thus the energy $E(u, v)$ is conserved, and so $u_0$ is stable.
+
+\end{enumerate}
+
+\subsection{Poincare-Bendixson Theorem}
+
+This important theorem applies only to differential equations in the plane. For a dyamical system with flow $\Phi_t$, recall the following definitions.
+
+\begin{definition}The \emph{orbit} of an initial condition $u_0$, denoted $\gamma(u_0)$, is the set of all points in the trajectory of the dynamical system passing through $u_0$. In other words,
+\[
+\gamma(u_0) = \{ \Phi_t(u_0), t \in \R \}
+\]
+Similarly, we can define the \emph{forward orbit} and \emph{backward orbit} of an initial condition.
+\begin{align*}
+\gamma^+(u_0) &= \{ \Phi_t(u_0), t \geq 0 \} \\
+\gamma^-(u_0) &= \{ \Phi_t(u_0), t \leq 0 \}
+\end{align*}
+\end{definition}
+
+We also recall the definition of the $\omega-$limit set.
+\begin{definition}The \emph{$\omega-$limit set} of an initial condition $u_0$, denoted $\omega(u_0)$, is the set of all points $u$ for which the forward trajectory starting at $u_0$ gets arbitratily close infinitely often as $t$ increases. Precisely, 
+\[
+\omega(u_0) = \{ u : \text{there exists an unbounded, increasing sequence of times }\{t_n\} \text{ such that } \Phi_{t_n}(u_0) \rightarrow u \}
+\]
+\end{definition}
+
+\begin{theorem}[Poincare-Bendixson]
+Consider the dynamical system on the plane
+\begin{align}\label{planarODE}
+\dot{u} = f(u)
+\end{align}
+If $\gamma^+(u_0)$ is bounded, then exactly one of the following is satisfied.
+\begin{enumerate}[(i)]
+\item $\omega(u_0)$ is a single periodic orbit.
+\item $\omega(u_0)$ is a single fixed point.
+\item $\omega(u_0)$ consists of a finite number of fixed points connected by homoclinic and heteroclinic orbits.
+\end{enumerate}
+\end{theorem}
+
+Before we prove this, we will give a few examples. The key move is to show that the forward orbit starting from some initial condition is bounded. The usual method to do that is to show that the initial condition is contained in a ``trapping region''.
+
+\subsubsection{Poincare-Bendixson Examples}
+\begin{example}
+\end{example}
+
+\subsubsection{Proof of Poincare-Bendixson}
+
+The result relies on the Jordan Curve theorem, which says that any simple closed curve (i.e. one does not self-intersect) divides the plane into a bounded interior and an unbounded exterior. No additional assumptions are made about the curve. In particular, it does not have to be either smooth or rectifiable. 
+
+\begin{theorem}[Jordan Curve Theorem]A simple closed curve $\Gamma$ divides the plane $\R^2$ into two disjoint, open, connected components: a bounded interior $I$ and an unbounded exterior $E$. The boundary of both regions is $\Gamma$, i.e. $\partial I = \partial E = \Gamma$.
+\end{theorem}
+
+Before we continue, we need to discuss coordinate changes of dynamical systems. We have the following lemma.
+
+\begin{lemma}[Change of Coordinates]
+Consider the differential equation $\dot{u} = f(u)$ defined on an open set $U$. Let $h: U \rightarrow V$ be a diffeomorphism with inverse $h$. Then $u(t)$ satisfies the original ODE $\dot{u} = f(u)$ if and only if $v(t) = h(u(t))$ satisfies the transformed ODE
+\[
+\dot{v} = Dg^{-1}(g(v))f(g(v))
+\]
+\begin{proof}
+By the chain rule,
+\begin{align*}
+\dot{v}(t) &= Dh(u(t))\dot{u}(t) \\
+&= Dh(h^{-1}(v(t))) f(u(t)) \\
+&= Dh(h^{-1}(v(t))) f(h^{-1}(v(t))) \\
+&= Dg^{-1}(g(v(t))) f(g(v(t))) 
+\end{align*}
+\end{proof}
+\end{lemma}
+
+In the next lemma, we devise a specific change of coordinates to ``straighten out'', or rectify, a vector field in one direction.
+
 \end{document}
