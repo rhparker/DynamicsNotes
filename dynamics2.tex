@@ -233,7 +233,9 @@ Thus the energy $E(u, v)$ is conserved, and so $u_0$ is stable.
 
 \subsection{Poincare-Bendixson Theorem}
 
-This important theorem applies only to differential equations in the plane. For a dyamical system with flow $\Phi_t$, recall the following definitions.
+This important theorem applies only to differential equations in the plane and gives a criterion for the existence of a periodic orbit. It only works in the plane. The rough intuition why is that if a trajectory is ``stuck in a box'', there is no way for it to get out.\\
+
+For a dyamical system with flow $\Phi_t$, recall the following definitions.
 
 \begin{definition}The \emph{orbit} of an initial condition $u_0$, denoted $\gamma(u_0)$, is the set of all points in the trajectory of the dynamical system passing through $u_0$. In other words,
 \[
@@ -282,7 +284,7 @@ The result relies on the Jordan Curve theorem, which says that any simple closed
 Before we continue, we need to discuss coordinate changes of dynamical systems. We have the following lemma.
 
 \begin{lemma}[Change of Coordinates]
-Consider the differential equation $\dot{u} = f(u)$ defined on an open set $U$. Let $h: U \rightarrow V$ be a diffeomorphism with inverse $h$. Then $u(t)$ satisfies the original ODE $\dot{u} = f(u)$ if and only if $v(t) = h(u(t))$ satisfies the transformed ODE
+Consider the differential equation $\dot{u} = f(u)$ defined on an open set $U$. Let $h: U \rightarrow V$ be a diffeomorphism with inverse $g$. Then $u(t)$ satisfies the original ODE $\dot{u} = f(u)$ if and only if $v(t) = h(u(t))$ satisfies the transformed ODE
 \[
 \dot{v} = Dg^{-1}(g(v))f(g(v))
 \]
@@ -297,6 +299,136 @@ By the chain rule,
 \end{proof}
 \end{lemma}
 
-In the next lemma, we devise a specific change of coordinates to ``straighten out'', or rectify, a vector field in one direction.
+In the next lemma, we devise a specific change of coordinates to ``straighten out'' a vector field in one direction. Although we will only use this lemma in $\R^2$, we will state and prove it in $\R^n$ since it is useful in its own right.
+
+\begin{lemma}[Rectification Lemma, Flow Box Lemma]
+Consider the system
+\[
+\dot{u} = f(u)
+\]
+for $u \in \R^n$ and $f \in C^1$, and suppose $p$ is not an equilibrium point, i.e. $f(p) \neq 0$. Then there exists a differentiable change of coordinates in a neighborhood $p$ so that, in the new coordinate system, the vector field consists entirely of unit vectors pointing in the same direction.\\
+
+Mathematically, there exists an open neighboorhood of $p$, $\delta > 0$, and a diffeomorphism 
+
+\[
+g: (-\delta, \delta) \times B(0, \delta) \subset \R \times \R^{n-1} \rightarrow U
+\]
+
+with $u(0, 0) = p$ such that in the new coordinate system, the system becomes
+
+\begin{align*}
+\begin{pmatrix}\dot{s}\\ \dot{w} \end{pmatrix} =
+\begin{pmatrix}1\\ 0\end{pmatrix}
+\end{align*}
+where $(s, w) \in \R \times \R^{n-1}$.
+
+\begin{proof}
+\begin{enumerate}
+\item Since $f(p) \neq 0$, we can extend $\{ f(p) \}$ to a basis $\{ f(p), e_1, \dots, e_{n-1} \}$ of $\R^n$.
+\item Define the section $\Sigma$ through the point $p$ as the subspace spanned by $\{e_1, \dots, e_{n-1} \}$ ``attached'' to the point $f(p)$, i.e.
+\[
+\Sigma = \left\{ p + \sum_{i=1}^{n-1} w_i e_i, w \in \R^{n-1} \right\}
+\]
+If our basis is orthogonal, this is a $n-1$-dimensional hyperplane passing through $p$ and perpendicular to $f(p)$.
+
+\item Let $\Phi_s$ be the flow of the original system, and define the mapping $g: (-\delta, \delta) \times B(0, \delta) \subset \R \times \R^{n-1} \rightarrow U$ by
+\[
+g(s, w) = \Phi_s\left( p + \sum_{i=1}^{n-1} w_i e_i \right)
+\]
+The map $s \mapsto g(s, w)$ is the unique solution to the original ODE with an IC which depends on $w$. We note the following
+\begin{align*}
+g(0, 0) &= \Phi_0(p) = p \\
+\frac{dg}{ds}(0, 0) &= f(p) \neq 0 \\
+\frac{dg}{w_i}(0, 0) &= e_i
+\end{align*}
+where the last one is true since $\Phi_0 = I$. From this, we have $g \in C^1$. Since
+\[
+Dg(0, 0) = [ f(p) | e_1 | \dots | e_{n-1}]
+\]
+is invertible (its columns are a basis), we can apply the inverse function theorem. Thus, $g$ is invertible on a neighborhood $(-\delta, \delta) \times B(0, \delta)$ of $(0, 0)$, and $g^{-1}$ is $C^1$.
+\item Finally, we verify that we did what we set out to do, i.e. show that we have attained the desired transformation.
+
+FILL THIS IN TOMORROW!!!!!!
+\begin{align*}
+Dg(g^{-1})
+\end{align*}
+
+\end{enumerate}
+\end{proof}
+\end{lemma}
+
+% consecutive crossing lemma
+
+\begin{lemma}[Consecutive Crossing Lemma]Let $q \in \R^2$ so that $f(q) \neq 0$. Let $\Sigma$ be a section at $q$ which is transverse to $f(q)$, i.e. $\Sigma$ is a line segment which is not parallel to $f(q)$ and through which the vector field $f$ crosses in the same direction as $f$.\\
+
+If for an initial condition $p$ the orbit of $p$ intersects $\Sigma$ for a sequence of increasing times $t_1 < t_2, t_3$ (i.e. $\Phi_{t_1}(p), \Phi_{t_2}(p), \Phi_{t_3}(p) \in \Sigma$), then $\Phi_{t_2}$ lies between $\Phi_{t_1}$ and $\Phi_{t_3}$, i.e. the crossings are consecutive.\\
+
+\begin{proof}
+
+Note that since $f(q) \neq 0$, by continuity of $f$, a section $\Sigma$ always exists. Also note that in order for multiple crossings of the section to be possible, the $\Sigma$ must be bounded.
+\begin{enumerate}
+\item It suffices to consider the case where $t_2$ is the only time between $t_1$ and $t_3$. (If there are more intermediate intersections, we can start with the three lowest times and keep repeating this to get the result.)
+
+\item If $\Phi_{t_1} = \Phi_{t_2}$, then we have a periodic orbit, and $\Phi_{t_3}$ must be equal to them both. Thus the result holds. From now on, we may therefore take $\Phi_{t_1} \neq \Phi_{t_2}$. For simplicity of description, we will say that $\Phi_{t_2}(p)$ is to the right of $\Phi_{t_2}(p)$ on $\Sigma$. 
+
+\item Consider the set
+\[
+\Gamma = \{ \Phi_t(p) : t_1 \leq t \leq t_2 \} \cup
+[\Phi_{t_1}(p), \Phi_{t_2}(p)]
+\]
+This is the union of the trajetory between $t_1$ and $t_2$ and piece of the section $\Sigma$ where the trajectory hits at $t_1$ and $t_2$. Since $t_1$ and $t_2$ are consecutive intersections of the trajectory with $\Sigma$ and since trajectories are continuous, $\Gamma$ is a simple, closed (Jordan) curve.
+
+\item By the Jordan Curve Theorem, $\Gamma$ has a bounded interior $I$ and an unbounded exterior $E$. Since trajectories can only cross $\Sigma$ in one direction, $\Phi_t(p)$ must cross $\Sigma$ once at $t_1$, loop around the end of $\Sigma$, and cross it again at $t_2$. Therefore, immediately after $t_2$, the trajectory $\Phi_t(p)$ must in the bounded interior $I$. It can never escape the interior, since that would mean the trajectory would either have to cross itself (forbidden by uniqueness) or cross $\Sigma$ in the wrong direction.
+
+\item The next crossing of $\Sigma$ at time $t_3$ cannot occur to the left of $\Phi_{t_1}(p)$, since it would have to leave $I$ to do that. It cannot occur between $\Phi_{t_1}(p)$ and $\Phi_{t_2}(p)$, since that would mean crossing $\Sigma$ in the wrong direction. The only possibility left is that it must cross to the right of $\Phi_{t_2}(p)$ (by looping back around the end). Thus the three crossings are in consecutive order. 
+
+\end{enumerate}
+\end{proof}
+\end{lemma}
+
+In the next lemma, we show some stuff.
+
+\begin{lemma}For an initial condition $u_0$, let $u_1 \in \omega(u_0$ with $f(u_1) \neq 0$. Let $\Sigma$ be a section at $u_1$, as described in the previous lemma. Then
+
+\[
+\omega(u_0) \cap \Sigma = \{ u_1 \}
+\]
+
+\begin{proof}
+We prove this by contradiction.
+\begin{enumerate}
+\item Suppose there is another such intersection points, i.e. we also have $u_2 \in \omega(u_0) \cap \Sigma$, and $u_1 \neq u_2$. Since $u_2 \in \Sigma$, by how we define a section, $f(u_2) \neq 0$. 
+\item Choose open, disjoint subintervals $J_1, J_2$ of $\Sigma$ with $u_1 \in J_1$ and $u_2 \in J_2$.
+\item Apply the Rectificion Theorem, so that the flow has constant velocity and perpendicular to $\Sigma$.
+\item Neither $u_1$ nor $u_2$ are equilibrium points, but both are in $\omega(u_0)$. Thus the trajectory $\Phi_t(u_0)$ must keep passing arbitrarily close to both of them; if the approach is close enough, the trajectory must cross $\Sigma$ when this occurs.
+\item Thus, we can find an increasing sequence of times $t_1 < t_2 < t_3$ such that
+\begin{align*}
+\Phi_{t_1}(u_0) &\in J_1 \\
+\Phi_{t_2}(u_0) &\in J_2 \\
+\Phi_{t_3}(u_0) &\in J_1
+\end{align*}
+This violates the Consecutive Crossing Lemma.
+\end{enumerate}
+\end{proof}
+\end{lemma}
+
+We are finally ready to prove the Poincare-Benixson Theorem. 
+
+\begin{enumerate}
+\item For a given IC $u_0$, suppose that $\omega(u_0)$ is bounded. Suppose that $\omega(u_0)$ is neither:
+
+\begin{enumerate}[(i)]
+\item A single fixed point. In this case, $\omega(u_0)$ is a single equilibrium point $u_1$, and $\omega(u_1) = \{ u_1 \}$.
+\item A finite number of fixed points connected by homoclinic and heteroclinic orbits. In this case, $\omega(u_0)$ is a bunch of stuff, but for every $u_1 \in \omega(u_0)$, $\omega{u_1}$ consists entirely of equilibria.
+\end{enumerate}
+We will show that $\omega(u_0)$ must be a periodic orbit.
+\item If neither of those cases is true, then we can find a point $u_1 \in \omega{u_0}$ such that $\omega{u_1}$ does not consist entirely of equilibria; that is, we can find $u_2 \in \omega(u_1)$ such that $u_2$ is not an equilibrium, i.e. $f(u_2) \neq 0$.
+\item Let $\Sigma$ be a section at $u_2$. Note that since $u_1 \in \omega(u_0)$, $\omega(u_1) \subset \omega(u_0)$, thus $u_2 \in \omega(u_0)$. Thus by the previous lemma, $\omega(u_0) \cap \Sigma = \{ u_2 \}$.
+\item Since $u_2 \in \omega(u_1)$, the trajectory $\Phi_t(u_1)$ must keep passing arbitrarily close to $u_2$, and each time it does so, it must cross $\Sigma$ (by how we constructed the section and the fact that $f(u_2) \neq 0$). Thus we can find an unbounded, increasing sequence of times $t_1 < t_2 < \dots \rightarrow \infty$ such that $\Phi_{t_n}(u_1) \in \Sigma$ for all $n$ and $\Phi_{t_n}(u_1) \rightarrow u_2$ as $n \rightarrow \infty$.
+\item Since the $\omega$-limit set is invariant under the flow and $u_1 \in \omega(u_0)$, $\Phi_{t_n}(u_1) \in \omega(u_0)$ for all $n$.
+\item By the previous lemma we conclude that $\Phi_{t_n}(u_1) = u_2$ for all $n$, thus $\gamma(u_1)$ is a periodic orbit contained in $\omega(u_0)$ (again by invariance). It is a nontrivial periodic orbit since it contains a point $u_2$ with $f(u_2) \neq 0$).
+
+\item Finally, we show that $\gamma(u_1) = \omega(u_0)$. Since the forward orbit $\gamma^+(u_0)$ is bounded (we finally use our initial assumption here!), $\omega(u_0)$ is connected. Suppose $\omega(u_0) \backslash \gamma(u_1)$ is nonempty. Then the rest of $\omega(u_0)$ must be ``attached to'' the periodic orbit at a point $u^* \in \gamma(u_1)$, i.e. there exists a sequence $u_n^* \in \omega(u_0) \backslash \gamma(u_1)$ such that $u_n^* \rightarrow u^*$. Since $u^*$ is on a periodic orbit, $f(u^*) \neq 0$. Let $\Sigma$ be a section at $u^*$. Then 
+\end{enumerate}
 
 \end{document}
