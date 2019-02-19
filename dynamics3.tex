@@ -91,7 +91,7 @@ v'(t) = g(t) u(t) \leq g(t)v(t)
 \] 
 Since $v(t) > 0$ on $[t_0, t_1]$, we can divide by it to get
 \begin{align*}
-\dfrac{\dot{v}(t)}{v(t)} &\leq g(t) && t \in $[t_0, t_1]$
+\dfrac{\dot{v}(t)}{v(t)} &\leq g(t) && t \in [t_0, t_1]
 \end{align*}
 Now, we integrate $g(s)$.
 \begin{align*}
@@ -115,8 +115,26 @@ u(t) &\leq \epsilon \exp \left( \int_{t_0}^t g(s) ds \right) \\&\leq \epsilon \e
 \end{align*}
 which is independent of $t$. Since $\epsilon$ is arbitrary, we conclude that $u = 0$ on $[t_0, t_1]$.
 \end{enumerate}
+\end{proof}
 \end{lemma}
 
+We can now show that $\dot{u} = A(t) u$ has a solution for all $t$ and all initial conditions $u_0$.
+
+\begin{theorem}
+Consider the system
+\begin{align*}
+\dot{u} &= A(t) u \\
+u(s) &= u_0
+\end{align*}
+where $u \in \R^n$ and $A:\R \rightarrow \R^{n \times n} \in C^0$. Then there exists a unique $C^1$ function $\Phi: \R \times \R \rightarrow \R^n$, called the \emph{fundamental solution}, such that for all $t, s, r \in \R$
+\begin{enumerate}[(i)]
+\item $\Phi(t, t) = I$ \\
+\item $\Phi(t, r)\Phi(r, s) = \Phi(t,s)$
+\item $u(t) = \Phi(t, s)u_0$ is the unique solution to the system with initial condition $u(s) = u_0$.
+\end{enumerate}
+\begin{proof}
+\end{proof}
+\end{theorem}
 
 
 \end{document}
