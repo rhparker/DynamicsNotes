@@ -1,0 +1,122 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{lipsum}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs,amsfonts,dsfont}
+\usepackage[shortlabels]{enumitem} 
+\newcounter{question}
+\setcounter{question}{0}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage{ esint }
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\def\noi{\noindent}
+\def\T{{\mathbb T}}
+\def\R{{\mathbb R}}
+\def\N{{\mathbb N}}
+\def\C{{\mathbb C}}
+\def\Z{{\mathbb Z}}
+\def\P{{\mathbb P}}
+\def\E{{\mathbb E}}
+\def\Q{\mathbb{Q}}
+\def\ind{{\mathbb I}}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\ran}{range}
+
+\title{Dynamics Notes 3}
+\author{Ross Parker}
+
+\begin{document}
+
+\section{Linear Systems}
+
+Consider the ODE
+
+\[
+\dot{u} = f(u)
+\]
+
+with $u \in \R^n$ and $f \in C^2$, and suppose $u^*(t)$ is a solution. Let $u(t) = u^*(t) + v(t)$ be a perturbation of $u^*(t)$, where (hopefully) $v(t)$ is small. Then $u(t)$ satsfies the ODE if and only if the perturbation $v(t)$ satisfies
+
+\begin{align*}
+\dot{v}(t) &= \dot{u}(t) - \dot{u}^*(t) \\
+&= f(u(t)) - f(u^*(t)) \\
+&= f(u^*(t) + v(t)) - f(u^*(t)) \\
+&= f(u^*(t)) + DF(u^*(t))v(t) + \mathcal{O}|v(t)|^2 - f(u^*(t)) \\
+&= DF(u^*(t))v(t) + \mathcal{O}|v(t)|^2 
+\end{align*}
+
+where we used the trusty Taylor theorem on $f$. Thus, assuming $v(t)$ is small, this system is approximately the linear system
+
+\begin{align*}
+\dot{v}(t) &= DF(u^*(t))v(t) 
+\end{align*}
+
+which is the linearization of the original system about the solution $u^*(t)$. Thus is will be useful to consider systems of the form
+
+\[
+\dot{u} = A(t) u
+\]
+
+where $u \in \R^n$ and $A:\R \rightarrow \R^{n \times n}$ is continuous. What we would like to do is show that solutions to this equation exist for all initial conditions $u_0$ and all $t$. To this requires the Gronwall Inequality. This is basically the world's worst inequality, but it will be good enough for our use. There are numerous versions of this inequality. Here is one of them.
+
+\begin{lemma}[Gronwall Inequality]
+Let $u(t), g(t)$ be non-negative, real-valued functions defined on $t \in [t_0, t_1]$. Let $C \geq 0$ be a constant so that
+\begin{align*}
+u(t) \leq C + \int_{t_0}^t g(s) u(s) ds && t \in [t_0, t_1]
+\end{align*}
+Then
+\begin{align*}
+u(t) &\leq C \exp \left( \int_{t_0}^t g(s) ds \right) && t \in [t_0, t_1]
+\end{align*}
+If $C = 0$, then $u = 0$ for $t \in [t_0, t_1]$.
+\begin{proof}
+\begin{enumerate}
+\item We first consider the case where $C > 0$. Let
+\[
+v(t) = C + \int_{t_0}^t g(s) u(s) ds
+\]
+Then $u(t) \leq v(t)$ on $[t_0, t_1]$ (by assumption), and $v(t) \leq C > 0$ on $[t_0, t_1]$ (since $g, u \geq 0$). Differentiating $v$ with respect to $t$, we have
+\[
+v'(t) = g(t) u(t) \leq g(t)v(t)
+\] 
+Since $v(t) > 0$ on $[t_0, t_1]$, we can divide by it to get
+\begin{align*}
+\dfrac{\dot{v}(t)}{v(t)} &\leq g(t) && t \in $[t_0, t_1]$
+\end{align*}
+Now, we integrate $g(s)$.
+\begin{align*}
+\int_{t_0}^t g(s) ds &\geq \int_{t_0}^t \dfrac{\dot{v}(s)}{v(s)} ds \\
+&= \int_{t_0}^t \frac{d}{ds}\left( \log {v(s)} \right) ds \\
+&= \log\dfrac{v(t)}{v(t_0)}\\
+&= \log\dfrac{v(t)}{C}
+\end{align*}
+Exponentiate both sides and multiply by $C$ to get
+\begin{align*}
+u(t) &\leq C \exp \left( \int_{t_0}^t g(s) ds \right) && t \in [t_0, t_1]
+\end{align*}
+\item If $C = 0$, then for $\epsilon > 0$,
+\begin{align*}
+u(t) \leq \epsilon + \int_{t_0}^t g(s) u(s) ds && t \in [t_0, t_1]
+\end{align*}
+By step (i), for $t \in [t_0, t_1]$ 
+\begin{align*}
+u(t) &\leq \epsilon \exp \left( \int_{t_0}^t g(s) ds \right) \\&\leq \epsilon \exp \left( \int_{t_0}^{t_1} g(s) ds \right) \\
+&\leq M \epsilon
+\end{align*}
+which is independent of $t$. Since $\epsilon$ is arbitrary, we conclude that $u = 0$ on $[t_0, t_1]$.
+\end{enumerate}
+\end{lemma}
+
+
+
+\end{document}
