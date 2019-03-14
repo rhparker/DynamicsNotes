@@ -1,0 +1,312 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{lipsum}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs,amsfonts,dsfont}
+\usepackage[shortlabels]{enumitem} 
+\newcounter{question}
+\setcounter{question}{0}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage{ esint }
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\def\noi{\noindent}
+\def\T{{\mathbb T}}
+\def\R{{\mathbb R}}
+\def\N{{\mathbb N}}
+\def\C{{\mathbb C}}
+\def\Z{{\mathbb Z}}
+\def\P{{\mathbb P}}
+\def\E{{\mathbb E}}
+\def\Q{\mathbb{Q}}
+\def\ind{{\mathbb I}}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\ran}{range}
+
+\title{Dynamics Notes 4}
+\author{Ross Parker}
+
+\begin{document}
+
+\section{Center Manifolds}
+
+\subsection{Motivation}
+
+Consider the ODE $\dot{u} = f(u)$, and suppose $u^*$ is a hyperbolic equilibrium point. Then we know from the stable manifold theorem that the dynamics near $u^*$ resemble that of the linearizerd system $\dot{v} = Df(u^*) v$ near the origin. We can imagine the stable and unstable eigenspaces of the linear system ``bending'' into the stable and unstable manifolds of the full system. If $f$ is perturbed slightly, $u^*$ will perturb nearby to another hyperbolic equilibrium point of the same type.
+\\
+
+What happens when $u^*$ is not hyperbolic, i.e. $Df(u^*)$ has an eigenvalue with 0 real part. The short answer is that the nonlinear terms matter. Consider two different 1-dimensional systems.
+
+\begin{align}
+\dot{x} &= x^2 \\
+\dot{x} &= x^3
+\end{align}
+
+Since $f'(0) = 0$ in both cases, both have a nonhyperbolic equilibrium at 0. Using the sign of the RHS, we can show that for the first equation, 0 is semi-stable, but for the second equation, 0 is unstable. Thus the nonlinear terms matter.\\
+
+For another example, consider the ODE
+
+\begin{equation}
+\dot{u} = f(u; \mu) = \mu + u^2
+\end{equation}
+
+which you may recognize as the normal form of a saddle node bifurcation. (We have not yet talked about what either of those is!) By graphing the RHS in the $(u, \dot{u})$ plane, we note the following.
+
+\begin{itemize}
+	\item For $\mu > 0$, there are no equilibrium points.
+	\item For $\mu < 0$, there are two equilibrium points at $u = \pm \sqrt{\mu}$. They are both hyperbolic; the left one is stable and the right one is unstable.
+	\item For $\mu = 0$, there is a single equilibrium point at $\mu = 0$. $f(0, 0) = f'(0, 0) = 0$, so this equilibrium point is not hyperbolic. Graphical analysis shows that it is semistable, but that relies on the nonlinear term.
+\end{itemize}
+
+We say that a \emph{bifurcation} occurs at $\mu = 0$, which means that the number (or types) of equilibria change when the parameter passes through that point. Bifurcations points occur when an equilibrium is not hyperbolic; in the hyperbolic case, we know from the Hartman-Grobman theorem and the stable manifold theorem that small perturbations in the parameter do not alter the number and type of equilibria. In fact, suppose $u^*(0)$ is an equilibrium point for the system $\dot{u} = f(u; \mu)$ at $\mu = 0$, i.e. $f(u^*(0); \mu)= 0$. If $u^*(0)$ is hyperbolic, then we can use the IFT to solve for $u^*$ uniquely in terms of $\mu$ near $\mu = 0$, i.e. we can find a function $u^*(\mu)$ such that $f(u^*(\mu), \mu) = 0$ for $\mu$ small.\\
+
+We wish to analyze the behavior of a system at (and near) a bifurcation point. \\
+
+Consider the system
+
+\begin{align}
+\dot{u} &= f(u; \mu) && u \in \R^n, \mu \in \R^p
+\end{align}
+
+Suppose for $\mu = 0$, 0 is a nonhyperbolic equilibrium point, i.e. $f(0; 0) = 0$, and $D_u f(0; 0)$ has $l$ eigenvalue with 0 real part, where $l > 0$. Then rough idea is as follows.
+
+\begin{enumerate}
+\item Reduce the dynamics of the system to an $l-$dimensional center manifold, where in general we will have $l = 1$ or $l = 2$.
+\item Using a clever change of coordinates, write the reduced system in a normal form $\dot{v} = g(v; \mu)$, where the dynamics of the reduced system are easier to analyze.
+\end{enumerate}
+
+Since the first step of this involves center manifolds, we had better talk about that first.
+
+\subsection{Center Manifold Theorem}
+
+The setup and statement of the center manifold theorem is very similar to that of the stable manifold theorem, except since since the equilibrium we are linearizing about is not hyperbolic, there is an additional center eigenspace to consider.
+
+\begin{theorem}[Center Manifold Theorem]
+Consider the autonomous ODE
+\begin{equation}
+\dot{u} = Au + g(u)
+\end{equation}
+where $g \in C^k$ for $k \geq 1$, $g(0) = 0$, and $Dg(0) = 0$. Suppose $A$ is not hyperbolic and has $l$ eigenvalues with real part 0. Let $E^s$, $E^u$, and $E^c$ be the stable, unstable, and center eigenspaces of $A$, and let $E^h = E^s \oplus E^u$ (the ``hyperbolic'' eigenspace). Let $\Phi_t$ be the flow of the system.\\
+
+Fix $1 \leq s \leq k$ with $s < \infty$. Then there exists $r > 0$ and an $l-$ dimensional manifold $W^c_{loc}(0)$, the local center manifold at 0, which is given by
+
+\[
+W^c_{loc}(0) = \{ (a, h(a)) : a \in E^h, |a| \leq r \}
+\]
+
+where $h: E^c \rightarrow E^h$ is $C^s$ with $h(0) = 0$ and $Dh(0) = 0$, i.e. $W^c_{loc}(0)$ is tangent to $E^c$ at $u = 0$.\\
+
+$W^s_{loc}(0)$ is \emph{locally} invariant under the flow $\Phi(t)$, i.e. if $u_0 \in W^c_{loc}(0)$ and $|P^c \Phi_t(u_0)| \leq r$ for $0 \leq t \leq T$, then $\Phi_t(u_0) \in W^c_{loc}$ for $0 \leq t \leq T$.\\
+
+Finally, we note that, in general, center manifolds are not unique, and center manifolds are not $C^\infty$ even if $g \in C^\infty$.
+
+\begin{proof}
+The proof is too involved and lengthy for these notes. The big picture is that we use the same technique as in the proof of the stable manifold theorem, except this time $A$ has a center eigenspace $E^c$ in addition to the stable and unstable eigenspaces. Unfortunately, we do not have exponential decay estimates for this space, so we cannot get the same nice bounds that we did in the stable manifold theorem. The trick is to use a family of smooth ``cutoff functions'' to eliminate the nonlinear term outside of a ball of a given radius, i.e. we replace the original problem with
+\begin{equation*}
+\dot{u} = Au + g_\rho(u)
+\end{equation*}
+where, say, $g_\rho(u) = g(u)$ for $|u| \leq \rho$, $g_\rho(u) = 0$ for $|u| \geq 2 \rho$, and $g_\rho$ is as smooth as $g$. Then as long as we have a solution $\Phi_t(u_0)$ for which $|\Phi_t(u_0)| \leq \rho$ for all $t \geq 0$, the original equation and the ``cutoff'' equation are equivalent. The function $g_\rho$ is globally Lipschitz, and we can make its Lipschitz constant as small as we want by choosing $\rho$ sufficiently small. This lets us obtain the bounds we need. Nonuniqueness of the center manifold is a consequence of the arbitrary choice of ``cutoff'' function.
+
+\end{proof}
+\end{theorem}
+
+The idea is that since things in the stable/unstable manifold decay/grow exponentially, the interesting behavior of a system occurs on the center manifold. If $A$ has unstable directions, then we don't care as much about the center manifold, since we will be repelled from the fixed point before we have time to do much of anything. The interesting case, then, is one in which $A$ only has stable and center directions. Intuitively, what will happen is that a trajectory starting close to the origin will decay rapidly towards a trajectory on the center manifold. Thus, ignoring this initial transient, what happens on the center manifold is what's really important. We can state this in the following theorem.
+
+\begin{theorem}
+Take the same setup as the center manifold theorem, and assume that $E^u = \{0 \}$. Then the equilibrium point at 0 is asymptotically stable for the full system if and only if it is asymptotically stable within $W^c_{loc}$.
+\end{theorem}
+
+To that end, we will write our system in the following way, following Wiggins.
+
+\begin{align}
+\dot{x} &= Ax + f(x, y) && x \in \R^c \\
+\dot{y} &= By + g(x, y) && y \in \R^s
+\end{align}
+
+where $A$ is a $c \times c$ matrix whose eigenvalues all have 0 real part and $B$ is a $s \times s$ matrix whose eigenvalues all have negative real part. Let 0 be an equilibrium point, so $f(0, 0) = g(0, 0) = 0$. Since all the linear stuff is contained in $A$ and $B$, we additionally have $Df(0, 0) = Dg(0, 0) = 0$. The $x$ equation is the ``center'' equation and the $y$ equation is the ``stable'' equation. Let $f, g$ be $C^2$ or smoother. Let $E^c$ be the (center) eigenspace of $A$ and $E^s$ the (stable) eigenspace of $B$. We note that a generic system $\dot{u} = f(u)$ will not look like this, but we can put it in this form by translating the equilibrium point to 0, extracting the linear part of $f$ (using the Taylor theorem), and applying projections on $E^c$ and $E^s$.
+\\
+
+By the Center Manifold Theorem, we can find $r > 0$ and $C^2$ function $h: E^c \cap B(0, r) \rightarrow E^s$ with $h(0) = Dh(0) = 0$ such that the center manifold is given by the graph of $h$. Then for $|x| < r$, we can plug in $y = h(x)$ into the ``center'' equation of our system to get the center manifold reduction
+
+\begin{align}
+\dot{x} &= Ax + f(x, h(x)) && x \in \R^c \\
+y &= h(x)
+\end{align}
+
+where the second equation holds since the center manifold is locally invariant under the flow.
+Near the equilibrium at 0, we have reduced the system to a $c-$dimensional ODE for the evolution in $E^s$. The component of the solution in $E^s$ is determined by the function $h$. Since this is just a function of $x$, we don't really care about it, and so we write the evolution on the center manifold as
+
+\begin{align}
+\dot{u} &= Au + f(u, h(u)) && u \in \R^c \\
+\end{align}
+
+Of course, in order to make any sense of this, we have to figure out what $h$ is. The idea is that we will assume $h(x)$ is the function whose graph is the local center manifold and then derive an equation that $h(x)$ must satisfy.\\
+
+Since every point in $W^c_{loc}(0)$ is given by $y = h(x)$, for the flow on the center manifold, substitute this into the original system to get
+
+\begin{align} 
+\dot{x} &= Ax + f(x, h(x)) \\
+\dot{y} &= Bh(x) + g(x, h(x))
+\end{align}
+
+Differentiate $y = h(x)$ with respect to $t$ to get
+
+\[
+\dot{y} = Dh(x) \dot{x}
+\]
+
+Substituting the expressions for $\dot{x}$ and $\dot{y}$, we get
+
+
+\[
+Bh(x) + g(x, h(x)) = Dh(x) [ Ax + f(x, h(x))]
+\]
+
+which we rearrange to obtain
+
+\begin{equation}\label{heq}
+Dh(x) [ Ax + f(x, h(x))] - Bh(x) - g(x, h(x)) = 0
+\end{equation}
+
+Looking at this, it appears we have made the problem worse, since there is no convenient way to solve this for $h(x)$. It turns out, however, that we can get approximate solutions of any degree of accuracy by assuming a Taylor series expansion for $h(x)$. Any theoretical justification for this is beyond the scope of these notes, but it is useful and legit. We take $h(x)$ of the form
+
+\[
+h(x) = a_2 x^2 + a_3 x^3 + \dots + a_n x^n + \mathcal{O}(x^{n+1})
+\]
+
+substitute this in, and then match coefficients of like powers of $x$.\\
+
+A specific example is useful at this point. We take the following example from Wiggins., Consider the ODE in $\R^2$
+
+\begin{align}
+\dot{x} &= x^2 y - x^5 \\
+\dot{y} &= -y + x^2
+\end{align}
+
+The origin is a fixed point for this system. We can write this in the form above as
+
+\begin{align}
+\dot{x} &= Ax + f(x, y) \\
+\dot{y} &= By + g(x, y)
+\end{align}
+
+where $A = 0$, $B = -1$, $f(x, y) = x^2 y - x^5$, and $g(x, y) = x^2$. From this, we easily see that the eigenvalues from the linearization about the origin are $-1$ and $0$, so we will have a 1-dimensional center manifold and a 1-dimensional stable manifold.\\
+
+Since the center manifold is 1-dimensional, and we are in $\R^2$, we assume the center manifold is the graph of a function $h(x)$, which we take the power series ansatz
+
+\[
+h(x) = a x^2 + b x^3 + \mathcal{O}(x^4)
+\]
+
+We are guessing that going up to cubic terms will be enough for our purposes. Noting that $DH(x) = h'(x) = 2 a x + 3 b x^2 + \mathcal{O}(x^3)$. We substitute this into \eqref{heq} to get
+
+\begin{align*}
+0 &= Dh(x) [ Ax + f(x, h(x))] - Bh(x) - g(x, h(x)) \\
+&= ( 2 a x + 3 b x^2 + \mathcal{O}(x^3) )[ x^2 (a x^2 + b x^3 + \mathcal{O}(x^4)) - x^5] + a x^2 + b x^3 + \mathcal{O}(x^4) - x^2 \\
+&= (a-1)x^2 + b x^3 + \mathcal{O}(x^4)
+\end{align*}
+
+from which we conclude $a = 1$ and $b = 0$, thus the center manifold is given by
+
+\[
+h(x) = x^2 + \mathcal{O}(x^4)
+\]
+
+Plugging $y = h(x)$ into the equation for $\dot{x}$, the evolution on the center manifold is given by 
+
+\[
+\dot{x} = x^4 + \mathcal{O}(x^5)
+\]
+
+For sufficiently small $x$, $x = 0$ is unstable on the center manifold (we are considering semistable to be unstable here), thus the origin is unstable for the original system.\\
+
+Finally, we note that we have to go through all of this rigmarole to determine the stability of the origin in the original system. Suppose we decided to cut corners and argue the following. For initial conditions close to the origin, the $y$ component will decay exponentially fast to 0. Thus stability of the origin should only depend on what happens with the $x$ component. If we set $y = 0$ in the $\dot{x}$ equation (in effect, approximating $W^c_{loc}(0)$ with $E^c$, we get the equation $\dot{x} = -x^5$, for which $x = 0$ is stable. Concluding from this that the origin is stable in the full system would be erroneous.\\
+
+We can do the same thing in the general case when the equilibrium point has stable, unstable, and center subspaces. In that case, after appropriate transformations, the system will look like
+
+\begin{align}
+\dot{x} &= Ax + f(x, y, z) && x \in \R^c \\
+\dot{y} &= By + g(x, y, z) && y \in \R^s \\
+\dot{z} &= Cz + h(x, y, z) && y \in \R^u 
+\end{align}
+
+where $f(0,0,0) = Df(0,0,0) = 0$, $g(0,0,0) = Dg(0,0,0) = 0$, and $h(0,0,0) = Dh(0,0,0) = 0$. The eigenvalues of $A$ have zero real part, those of $B$ have negative real part, and those of $C$ have positive real part. The equilibrium point at 0 is unstable since there is an unstable manifold. However, we can still apply the center manifold theorem. The center manifold will be the graph of the function $p: E^c \cap B(0, r) \rightarrow E^s \times E^u$, which we will write as $p = (p_1, p_2)$, where $p_i(0) = p_i'(0) = 0$ for $i = 1, 2$. Then the system reduced to the center manifold becomes
+
+\[
+\dot{u} = Au + f(x, p_1(x), p_2(x))
+\]
+
+We can use the same procedure we used above to derive equations that $p_1(x)$ and $p_2(x)$ must satisfy, and we can derive an approximate solution using a power series ansatz.\\
+
+We conclude with a final example.\\
+
+Consider the ODE
+
+\[
+\begin{pmatrix}\dot{u}_1 \\ \dot{u}_2
+\end{pmatrix}
+= f(u_1, u_2)
+= \begin{pmatrix} u_1 u_2 + u_1^3 \\ -u_2 - 2u_1^2 + u_2^2
+\end{pmatrix}
+\]
+
+$(0,0)$ is an equilibrium point, and 
+
+\[
+Df(u_1, u_2) = \begin{pmatrix}
+u_2 + 3 u_1^2 & u_1 \\
+-4 u_1 & -1 + 2 u^2
+\end{pmatrix}
+\]
+
+so at $(0, 0)$ we have
+
+\[
+Df(0, 0) = \begin{pmatrix}
+0 & 0 \\
+0 & -1
+\end{pmatrix}
+\]
+
+thus the origin is a nonhyperbolic equilibrium with one center direction and one stable direction. In this case, our system looks can be written as
+
+\begin{align*}
+\dot{u}_1 &= f(u_1, u_2) \\
+\dot{u}_2 &= -u_2 + g(u_1, u_2)
+\end{align*}
+
+where $f(u_1, u_2) = u_1 u_2 + u_1^3$ and $g(u_1, u_2) = - 2u_1^2 + u_2^2$ are purely nonlinear. The $u_1$ equation is the ``center'' equation, and the $u_2$ equation is the ``stable'' equation. For the center manifold reduction, we take the ansatz $h(u_1) = a u_1^2 + \mathcal{O}(u_1^3)$ and hope that we have enough terms in the power series to get a meaningful result. The derivative is $h'(u_1) = 2 a u_1 + \mathcal{O}(u_1^2)$. We substitute this into \eqref{heq} (with $A = 0$ and $B = -1$) to get
+
+\begin{align*}
+0 &= Dh(u_1) [ Au_1 + f(u_1, h(u_1))] - Bh(u_1) - g(u_1, h(u_1)) \\
+&= ( 2 a u_1 + \mathcal{O}(u_1^2) )[ u_1 (a u_1^2 + \mathcal{O}(u_1^3)) + u_1^3 ] + a u_1^2 + \mathcal{O}(u_1^3) + 2u_1^2 - (a u_1^2 + \mathcal{O}(u_1^3))^2 \\
+&= (a + 2) u_1^2 + \mathcal{O}u_1^3
+\end{align*}
+
+Thus we have $a = -2$, which gives us the expression for $h$
+
+\[
+h(u_1) = -2 u_1^2 + \mathcal{O}(u_1^3)
+\]
+
+Plugging this into the ODE for $u_1$, we get the evolution on the center manifold.
+
+\begin{align*}
+\dot{u}_1 &= u_1 (-2 u_1^2 + \mathcal{O}(u_1^3)) + u_1^3 \\
+&= -u_1^3 + \mathcal{O}(u_1^4)
+\end{align*}
+
+which is stable for small $u$. Thus we conclude that since there is no unstable direction, and the origin is asymptotically stable in the center manifold, the origin is asymptotically stable for the full system. Again, had we just taken $u_2 = 0$, we would have gotten the ODE $\dot{u_1} = u_1^3$ and erroneously concluded that the origin was unstable.
+
+
+
+\end{document}

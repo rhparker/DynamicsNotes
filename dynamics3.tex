@@ -45,7 +45,7 @@ Consider the ODE
 \dot{u} = f(u)
 \]
 
-with $u \in \R^n$ and $f \in C^2$, and suppose $u^*(t)$ is a solution. Let $u(t) = u^*(t) + v(t)$ be a perturbation of $u^*(t)$, where (hopefully) $v(t)$ is small. Then $u(t)$ satsfies the ODE if and only if the perturbation $v(t)$ satisfies
+with $u \in \R^n$ and $f \in C^2$, and suppose $u^*(t)$ is a solution. Let $u(t) = u^*(t) + v(t)$ be a perturbation of $u^*(t)$, where (hopefully) $v(t)$ is small. Then $u(t)$ satisfies the ODE if and only if the perturbation $v(t)$ satisfies
 
 \begin{align*}
 \dot{v}(t) &= \dot{u}(t) - \dot{u}^*(t) \\
@@ -61,13 +61,17 @@ where we used the trusty Taylor theorem on $f$. Thus, assuming $v(t)$ is small, 
 \dot{v}(t) &= DF(u^*(t))v(t) 
 \end{align*}
 
-which is the linearization of the original system about the solution $u^*(t)$. Thus is will be useful to consider systems of the form
+which is the linearization of the original system about the solution $u^*(t)$. 
+
+\subsection{Global existence for linear systems}
+
+Thus it is useful to consider systems of the form
 
 \[
 \dot{u} = A(t) u
 \]
 
-where $u \in \R^n$ and $A:\R \rightarrow \R^{n \times n}$ is continuous. What we would like to do is show that solutions to this equation exist for all initial conditions $u_0$ and all $t$. To this requires the Gronwall Inequality. This is basically the world's worst inequality, but it will be good enough for our use. There are numerous versions of this inequality. Here is one of them.
+where $u \in \R^n$ and $A:\R \rightarrow \R^{n \times n}$ is continuous. What we would like to do is show that solutions to this equation exist for all initial conditions $u_0$ and all $t$. To this requires the Gronwall Inequality. This is basically the world's worst inequality, but it will be good enough for our use. There are numerous versions of this inequality. Here is one of them.\\
 
 \begin{lemma}[Gronwall Inequality]
 Let $u(t), g(t)$ be non-negative, real-valued functions defined on $t \in [t_0, t_1]$. Let $C \geq 0$ be a constant so that
@@ -118,9 +122,9 @@ which is independent of $t$. Since $\epsilon$ is arbitrary, we conclude that $u 
 \end{proof}
 \end{lemma}
 
-We can now show that $\dot{u} = A(t) u$ has a solution for all $t$ and all initial conditions $u_0$.
+We can now show that $\dot{u} = A(t) u$ has a solution for all $t$ and all initial conditions $u_0$.\\
 
-\begin{theorem}
+\begin{theorem}[Fundamental Matrix Solution]
 Consider the system
 \begin{align*}
 \dot{u} &= A(t) u \\
@@ -156,12 +160,12 @@ where the bound holds uniformly for $t \in [s, t_0)$ since it does not depend on
 \end{proof}
 \end{theorem}
 
-We collect some properties of $\Phi(t,s)$ in the following lemma. We first give the following definition of a matrix solution.
+We collect some properties of $\Phi(t,s)$ in the following lemma. We first give the following definition of a matrix solution.\\
 
 \begin{definition}A \emph{matrix solution} of the ODE $\dot{u} = A(t)u, u \in \R^n$ is a $n \times n$ matrix $\Psi(t)$ whose columns are linearly independent solutions.
 \end{definition}
 
-Since the ODE is linear, matrix solutions are well defined, i.e. if the columns are linearly independent for some $t$ then they are linearly independent for all $t$.
+Since the ODE is linear, matrix solutions are well defined, i.e. if the columns are linearly independent for some $t$ then they are linearly independent for all $t$.\\
 
 \begin{lemma}
 Let $\Phi(t, s)$ be the fundamental matrix solution for $\dot{u} = A(t) u$. Then
@@ -181,7 +185,7 @@ Let $\Phi(t, s)$ be the fundamental matrix solution for $\dot{u} = A(t) u$. Then
 \begin{proof}
 (i) follows from the use of Gronwall's inequality in the previous theorem. (ii) follows since $\Phi(s,t)\Phi(t,s) = \Phi(t,s)\Phi(s,t) = I$ by uniqueness of solutions. (iii) follows from $\Phi(t,s) = \Phi(t,0)\Phi(0,s) = \Phi(t)\Phi(s)^{-1}$. (iv)(a) follows from the definition of the fundamental matrix solution $\Phi$.\\
 
-For Liouville's (iv), we do the following.
+For Liouville's formula (iv), we do the following.
 \begin{enumerate}
 \item Since $\Psi(t)$ is a matrix solution, its columns are linearly independent, so $\det \Psi(s) \neq 0$ for all $s$.
 \item Take the matrix $\Psi(t)\Psi(s)^{-1}$ representing the flow of the system from $s$ to $t$, and write it in column form as
@@ -216,7 +220,63 @@ Since we are taking $s = t$, this becomes
 \end{proof}
 \end{lemma}
 
-Now that we have shown that the fundamental solution exists for linear ODEs of the form $\dot{u} = A(t) u$, we will show that a unique solution exists for the inhomogeneous ODE $\dot{t} = A(t)u + g(u, t)$. Even better, we have a formula for the solution!
+The standard application of Liouville's Formula is to find the final linearly independent solution of an $n-$th order linear system, when $n-1$ linearly independent solutions are already known. As an example, consider the system
+
+\[
+\dot{y} = 
+\begin{pmatrix}1 & -1/t \\ 1 + t & -1 \end{pmatrix}
+\] 
+for $t \in (0, \infty)$ and $y \in \R^2$. Let $A(t)$ be the matrix. Suppose you know that $y(t) = (1, t)$ is a solution. Either you guessed it, or genie told you, or whatever. Let's use Liouville's Formula to find another linearly independent solution. Let $y = (y_1(t), y_2(t))$ be that solution. Thus 
+
+\[
+\Psi(t) = \begin{pmatrix}
+y_1(t) & 1 \\
+y_2(t) & t 
+\end{pmatrix}
+\]
+
+is a matrix solution. Since $\text{Tr }A(t) = 0$, the integral in Liouville's formula vanishes, thus it reduces to $\det \Psi(t) = \det \Psi(s)$ for all $s,t > 0$. In other words, $\det Psi(t)$ is constant. Evaluating this, we have
+
+\begin{align*}
+c_1 &= \det \Psi(t) \\
+&= t y_1(t) - y_2(t)
+\end{align*}
+
+which we can solve for $y_2$ to get
+\[
+y_2(t) = t y_1(t) - c_1
+\]
+
+We then plug this into the expression for $\dot{y_1}$ from the original ODE.
+
+\begin{align*}
+\dot{y_1}(t) &= y_1(t) - \frac{y_2(t)}{t} \\
+&= y_1(t) - \frac{t y_1(t) - c_1}{t} \\
+&= \frac{c_1}{t}
+\end{align*}
+
+which is independent of $y_1$ (!) Integrating this, we get
+
+\[
+y_1(t) = c_1 \log t + c_2
+\]
+
+which implies
+
+\[
+y_2(t) = c_1 t \log t + c_2 t - c_1
+\]
+
+We should be able to play with the constants to get another linearly independent solution. If we take $(c_1, c_2) = (0, 1)$, we recover the solution we already have. Taking $(c_1, c_2) = (1, 0)$ gives us another linearly independent solution $(\log t, t \log t - 1)$, which would have been much harder to guess. Thus a matrix solution to the system is
+
+\[
+\Psi(t) = \begin{pmatrix}
+\log t & 1 \\
+t \log t - 1 & t 
+\end{pmatrix}
+\]
+
+Now that we have shown that the fundamental solution exists for linear ODEs of the form $\dot{u} = A(t) u$, we will show that a unique solution exists for the inhomogeneous ODE $\dot{t} = A(t)u + g(u, t)$. Even better, we have a formula for the solution!\\
 
 \begin{theorem}[Variation of Constants Formulas]\label{VOC}
 \begin{enumerate}[(i)]
@@ -247,24 +307,24 @@ Similarly, you can verify (ii) by plugging in the formula.
 \end{proof}
 \end{theorem}
 
-Finally, we look at the variational equation, which shows up all the time in applications.
+% Finally, we look at the variational equation, which shows up all the time in applications.
 
-Consider the ODE
-\[
-\dot{u} = f(u)
-\]
-with $u \in \R^n$ and $f \in C^1$. Let $\Phi_t(u)$ be the flow of the system. Since $f$ does not depend on $t$, this flow is independent of what time we use for our initial condition, so we can always take it at $t = 0$. Thus, for all $t \in \R$, $u \in \R^n$ we have
+% Consider the ODE
+% \[
+% \dot{u} = f(u)
+% \]
+% with $u \in \R^n$ and $f \in C^1$. Let $\Phi_t(u)$ be the flow of the system. Since $f$ does not depend on $t$, this flow is independent of what time we use for our initial condition, so we can always take it at $t = 0$. Thus, for all $t \in \R$, $u \in \R^n$ we have
 
-\begin{align*}
-\frac{d}{dt}\Phi_t(u) &= f(\Phi_t(u)) \\
-\Phi_0(u) &= u
-\end{align*}
+% \begin{align*}
+% \frac{d}{dt}\Phi_t(u) &= f(\Phi_t(u)) \\
+% \Phi_0(u) &= u
+% \end{align*}
 
-Now we differentiate this in $u$ at $u = u_0$.
+% Now we differentiate this in $u$ at $u = u_0$.
 
-\begin{align*}
-\frac{d}{dt} D\Phi_t(u_0) &= Df(\Phi_t(u_0)) D\Phi_t(u_0)
-\end{align*}
+% \begin{align*}
+% \frac{d}{dt} D\Phi_t(u_0) &= Df(\Phi_t(u_0)) D\Phi_t(u_0)
+% \end{align*}
 
 \subsection{Floquet Theory}
 
@@ -289,7 +349,7 @@ With that example in mind, we will consider the linear system
 \dot{u} &= A(t) u
 \end{align*}
 
-where $u \in \R^n$, $A(t)$ is a continuous $n \times n$ matrix which is periodic with period $T$. The Floquet theorem lets us decompose the fundamental matrix solution $\Phi(t)$ into the product of a periodic matrix and a matrix exponential.
+where $u \in \R^n$, $A(t)$ is a continuous $n \times n$ matrix which is periodic with period $T$. The Floquet theorem lets us decompose the fundamental matrix solution $\Phi(t)$ into the product of a periodic matrix and a matrix exponential.\\
 
 \begin{theorem}[Floquet]
 Let $\Phi(t)$ be the fundamental matrix solution to $\dot{u} = A(t) u$, where $A(t)$ is continuous and $T-$periodic. Then
@@ -406,7 +466,7 @@ The operator $\Phi(T)$ is known as the \emph{monodromy matrix} or \emph{monodrom
 M = \Phi(T) = P(T)e^{BT} = P(0) e^{BT} = e^{BT}
 \]
 
-since $P$ is $T-$periodic, with $P(0) = I$. Thus we can study stability of the equilibrim at 0 by looking at the discrete dynamical system
+since $P$ is $T-$periodic, with $P(0) = I$. Thus we can study stability of the equilibrium at 0 by looking at the discrete dynamical system
 
 \[
 v_{n+1} = M v_n
@@ -425,6 +485,363 @@ Finally, we remark that since the Floquet multipliers are eigenvalues of a matri
 \end{align*}
 
 $\tilde{R}(t) = R(t) e^{-2\pi i t/T}$ is still $T-$periodic, thus this is a valid Floquet normal form. We have a new matrix $\tilde{B} = B + (2 \pi i/T) I$, whose eigenvalues are shifted by $2 \pi i/T$. Thus Floquet exponents are only unique modulo $2 \pi i/T$.
+
+\subsection{Stable Manifold Theorem}
+
+Consider the autonomous ODE
+\begin{equation}
+\dot{u} = f(u)
+\end{equation}
+where $u \in \R^n$, $f: \R^n \rightarrow R^n$ is smooth, and $f(0) = 0$. Expanding $f$ in a Taylor series about $u = 0$, this becomes
+
+\begin{align*}
+\dot{u} &= f(0) + Df(0)u + \mathcal{O}(|u|^2) \\
+&= Au + g(u)
+\end{align*}
+where $A = Df(0)$ is a constant-coefficient matrix. From the Taylor theorem, $g(u) = \mathcal{O}(|u|^2)$, thus $g(0) = 0$ and $Dg(0) = 0$. Essentially, we ``extracted'' the linear terms into $A$, so $g$ is quadratic or higher order. We know exactly how the constant coefficient linear system $\dot{u} = Au$ behaves. We would like to relate the behavior of the linearized system to that of the original, nonlinear system.\\
+
+The Hartman-Grobman theorem states that if 0 is a hyperbolic equilibrium of the linearized system, then the qualitative behavior of the nonlinear system near 0 is the same. We would like to be able to say more. In particular, we would like to show that the stable and unstable manifolds of the linear system perturb in some meaningful way to give us corresponding stable and unstable manifolds of the nonlinear system. To that end, we state and prove the Stable Manifold Theorem.\\
+
+\begin{theorem}[Stable Manifold Theorem]
+Consider the autonomous ODE
+\begin{equation}
+\dot{u} = Au + g(u)
+\end{equation}
+where $A$ is hyperbolic (i.e. has no eigenvalues with real part 0), $g \in C^k$ for $k \geq 1$, $g(0) = 0$, and $Dg(0) = 0$. Let $E^s$ and $E^u$ be the stable and unstable eigenspaces of $A$. Then there exists $r > 0$ and a manifold $W^s_{loc}(0)$, the local stable manifold at 0, which is given by
+
+\[
+W^s_{loc}(0) = \{ (a, h(a)) : a \in E^s, |a| \leq r \}
+\]
+
+where $h: E^s \rightarrow E^u$ is $C^k$ with $h(0) = 0$ and $Dh(0) = 0$, i.e. $W^s_{loc}(0)$ is tangent to $E^s$ at $u = 0$.\\
+
+If $\Phi(t)$ is the flow of the system, $W^s_{loc}(0)$ is forward invariant under the flow $\Phi(t)$, i.e. if $u_0 \in W^s_{loc}(0)$, then $\Phi(t)u_0 \in W^s_{loc}(0)$ for all $t \geq 0$. \\
+
+Finally, initial conditions $u_0$ in $W^s_{loc}(0)$ decay exponentially to 0 under the flow, i.e. for all $u_0 \in W^s_{loc}(0)$, $\Phi(t)u_0 \rightarrow 0$ exponentially as $t \rightarrow 0$.
+
+\begin{proof}
+The proof is lengthy, but the basic idea is as follows. Essentially, we use variation of constants to write the ODE in integrated form, them project onto $E^s$ and $E^u$ to get two equations. We solve the $E^u$ equation for the initial condition in the unstable subspace, and then plug this into the $E^s$ equation. This gives us a contraction map between Banach spaces, to which we apply the uniform contraction mapping principle. 
+
+\begin{enumerate}
+\item Since $A$ is hyperbolic, we can find $\alpha > 0$ such that $\text{Re }(\lambda)$ lies outside $(-\alpha, \alpha)$ for all eigenvalues $\lambda$ of $A$.
+
+\item We use hyperbolicity to get estimates on the matrix exponential $e^{At}$. Let $P^s$ and $P^u$ be the spectral projections on $E^s$ and $E^u$. Since they are spectral projections, they commute with $A$, and thus commute with $e^{At}$. Then things in the stable subspace decay exponentially in forward time, and things in the unstable subspace decay exponentially in backward time. In other words, there exists $M \geq 1$ such that
+\begin{align*}
+||e^{At} P^s || &\leq M e^{-\alpha t} && t \geq 0 \\
+||e^{At} P^u || &\leq M e^{\alpha t} && t \leq 0
+\end{align*}
+
+\item Next, we look at the function $g$. Since $g$ is at least $C^1$, it is locally Lipshitz. Thus, for every $\rho > 0$, $g$ is Lipschitz on $B(0, \rho)$ with Lipschitz constant $L(\rho) = \max\{||Dg(u)||: |u| \leq \rho\}$. Furthermore, since $Dg(0) = 0$ and $Dg$ is continuous, $L(\rho) \rightarrow 0$ as $\rho \rightarrow 0$. Since $g(0) = 0$, this implies that $|g(u)| \leq L(\rho)|u|$ whenever $|u| \leq \rho$.
+
+\item Suppose $u(t)$ satisfies $\dot{u} = Au + g(u)$ with $u(0) = u_0$. Using the Variation of Constants Formula, we write $u(t)$ in integrated form as
+\[
+u(t) = e^{At} u_0 + \int_0^t e^{A(t-s)}g(u(s)) ds
+\]
+
+\item Apply the projections $P^s$ and $P^u$ to the integrated form. Recalling that the projections commute with $e^{At}$, these become
+
+\begin{align*}
+P^u u(t) &= e^{At} P^u u_0 + \int_0^t e^{A(t-s)} P^u g(u(s)) ds \\
+P^s u(t) &= e^{At} P^s u_0 + \int_0^t e^{A(t-s)} P^s g(u(s)) ds
+\end{align*}
+We will call these the unstable and stable equations. 
+
+\item What we want to do now is solve the ``unstable'' equation for $P^s(u_0)$ for a suitable set of functions $u(t)$. Suppose $u(t)$ is bounded for $t \geq 0$, i.e. $|u(t)| \leq \rho$ for $t \geq 0$. (The actual bound does not matter for now, only that there is one.)\\
+
+Multiplying the unstable equation by $e^{-At}$ on the right, we get
+
+\begin{align*}
+e^{-At} P^u u(t) &= P^u u_0 + \int_0^t e^{-As} P^u g(u(s)) ds
+\end{align*}
+
+We want to solve for $P^u u_0$ independently from $t$, so one strategy is to send $t \rightarrow \infty$. If we do that, the term on the LHS vanishes, since
+
+\begin{align*}
+| e^{-At} P^u u(t) | &\leq M e^{-\alpha t} |u(t)| \\
+&\leq M \rho e^{-\alpha t}
+\end{align*}
+
+The indefinite integral converges, since
+
+\begin{align*}
+\left| \int_0^\infty e^{-As} P^u g(u(s)) ds \right| 
+&\leq \int_0^\infty || e^{-As} P^u || L(\rho) |u(s)| ds \\
+&\leq M L(\rho) \rho \int_0^\infty e^{-\alpha s} ds < \infty
+\end{align*}
+
+Thus, as long as $u(t)$ is bounded for $t \geq 0$, we can solve for $P^u u_0$ to get
+
+\begin{align*}
+P^u u_0 &= -\int_0^\infty e^{-As} P^u g(u(s)) ds
+\end{align*}
+
+\item Now, we add together the stable and unstable equations. Since $P^s + P^u = I$, the LHS is just $u(t)$. 
+
+\begin{align*}
+u(t) &= e^{At} P^s u_0 + e^{At} P^u u_0 + \int_0^t e^{A(t-s)} P^u g(u(s)) ds + \int_0^t e^{A(t-s)} P^s g(u(s)) ds
+\end{align*}
+
+Substituting in our expression for $P^u u_0$, we get
+
+\begin{align*}
+u(t) &= e^{At} P^s u_0 - e^{At} \int_0^\infty e^{-As} P^u g(u(s)) ds + \int_0^t e^{A(t-s)} P^u g(u(s)) ds + \int_0^t e^{A(t-s)} P^s g(u(s)) ds \\
+&= e^{At} P^s u_0 + \int_\infty^0 e^{A(t-s)} P^u g(u(s)) ds + \int_0^t e^{A(t-s)} P^u g(u(s)) ds + \int_0^t e^{A(t-s)} P^s g(u(s)) ds \\
+&= e^{At} P^s u_0 + \int_\infty^t e^{A(t-s)} P^u g(u(s)) ds + \int_0^t e^{A(t-s)} P^s g(u(s)) ds \\
+\end{align*}
+
+As long as $u(t)$ is bounded for $t \geq 0$, this formula is valid.
+
+\item Let $a = P^s u_0 \in E^s$. Then define the map $F(u, a)$ by the RHS of the RHS of the expression above.
+
+\[
+[F(u, a)](t) = e^{At} P^s a + \int_\infty^t e^{A(t-s)} P^u g(u(s)) ds + \int_0^t e^{A(t-s)} P^s g(u(s)) ds
+\]
+
+where we added an extra $P^s$ in front of $a$ since $P^s$ is the identity on $E^s$.\\
+
+Note that we have not yet specified what spaces this maps from and to. Since we want to use the Uniform Contracting Mapping Principle, we want to show that $F: D \times B \rightarrow D$, where $D$ is a closed subset of a Banach space $X$, and $B$ is a subset of $\R^n$. There are a few choices for Banach spaces $X$. We will use an exponentially weighted space, since it will make our lives easier in the end. Choose any $\beta$ with $0 < \beta < \alpha$, and define the norm
+
+\[
+||f||_\beta = \sup_{t \geq 0}|e^{\beta t}f(t)|
+\]
+
+We note that $||f||_\beta \leq \rho$ implies $\sup_{t \geq 0} f(t)$. Then the space
+
+\[
+X_\beta = \{ f \in C^0([0, \infty), \R^n) : ||f||_\beta < \infty \}
+\]
+
+is a Banach space. Note that every function $u(t)$in this space is bounded, so our formula above is valid for it.\\
+
+Let
+
+\[
+D = \{ u \in X_\beta : ||u||_\beta \leq \rho \}
+\]
+
+where $\rho > 0$ will be chosen later. For the parameter space, let
+
+\[
+B = \{a \in E^s : |a| \leq r \}
+\]
+
+where $r > 0$ will be chosen later.
+
+\item We will now verify the hypotheses of the contraction mapping principle. As we do this, we will choose the values of the two radii $\rho$ and $r$. (It doesn't matter what they are, as long as they exist.) First, we show that $F: D \times B \rightarrow D$. Let $(u, a) \in D \times B$. 
+
+Then
+
+\begin{align*}
+|e^{\beta t} [F(u, a)](t)| &\leq e^{\beta t} || e^{At} P^s || \: |a| + \int_t^\infty e^{-\beta t} || e^{A(t-s)} P^u||\:|g(u(s))| ds + \int_0^t || e^{A(t-s)} P^s|| \: |g(u(s))| ds \\
+&\leq e^{\beta t} M e^{-\alpha t} r + M \int_t^\infty e^{\beta t} e^{\alpha(t-s)}L(\rho)|u(s)| ds + M \int_0^t e^{\beta t} e^{-\alpha(t-s)} L(\rho)|u(s)| ds \\ 
+&= M e^{-(\alpha - \beta) t} r + L(\rho) M \int_t^\infty e^{\beta (t-s)} e^{\alpha(t-s)}|e^{\beta s} u(s)| ds +  L(\rho) M \int_0^t e^{\beta (t-s)} e^{-\alpha(t-s)}|e^{\beta s} u(s)| ds \\
+&= M r + L(\rho)||u||_\beta M \int_t^\infty e^{-(\alpha + \beta)(s-t)} ds +  L(\rho) ||u||_\beta M \int_0^t e^{-(\alpha - \beta)(t-s)} ds \\
+&= M r + L(\rho) \rho M \left( \frac{1}{\alpha + \beta} + \frac{1}{\alpha - \beta} \right) \\
+\end{align*}
+
+Since $L(\rho) \rightarrow 0$ as $\rho \rightarrow 0$, first choose $\rho$ sufficiently small so that 
+
+\[
+L(\rho) \leq \frac{1}{2M}\left( \frac{1}{\alpha + \beta} + \frac{1}{\alpha - \beta} \right)^{-1}
+\]
+
+That gives us 
+
+\[
+|e^{\beta t} [F(u, a)](t)| \leq M r + \frac{\rho}{2}
+\]
+
+Finally choose $r \leq \frac{\rho}{2M} $ to get
+
+\[
+|e^{\beta t} [F(u, a)](t)| \leq \rho 
+\]
+
+Thus we have shown that $F: D \times B \rightarrow B$.
+
+\item We next show that $F$ is a uniform contraction. Similar to what we did in the previous step, we evaluate
+
+\begin{align*}
+|e^{\beta t} &([F(u, a)](t) - [F(v,a)](t))| \\
+&\leq M \int_t^\infty e^{\beta t} e^{\alpha(t-s)} |g(u(s)) - g(v(s))| ds + M \int_0^t e^{\beta t} e^{-\alpha(t-s)}|g(u(s)) - g(v(s))| ds \\
+&\leq M \int_t^\infty e^{\beta t} e^{\alpha(t-s)} L(\rho) |u(s) - v(s)| ds + M \int_0^t e^{\beta t} e^{-\alpha(t-s)}L(\rho) |u(s) - v(s)| ds \\
+&= M \int_t^\infty e^{\beta(t-s)} e^{\alpha(t-s)} L(\rho) |e^{\beta s}(u(s) - v(s))| ds + M \int_0^t e^{\beta(t-s)} e^{-\alpha(t-s)}L(\rho)|e^{\beta s}(u(s) - v(s))| ds \\ 
+&\leq M L(\rho) ||u - v||_\beta \left( \int_t^\infty e^{-(\alpha + \beta)(s-t)} ds +   \int_0^t e^{-(\alpha - \beta)(t-s)} ds \right) \\
+&= M L(\rho) ||u - v||_\beta \left( \frac{1}{\alpha + \beta} + \frac{1}{\alpha - \beta} \right) \\
+&\leq \frac{1}{2}||u - v||_\beta
+\end{align*}
+
+Taking the supremum over all $t \geq 0$, we conclude that for all $a \in B$, 
+
+\[
+||F(u, a) - F(v,a)||_\beta \leq \frac{1}{2}||u - v||_\beta
+\]
+
+Thus $F$ is a contraction.
+
+\item By the Uniform Contraction Mapping Principle, there is a unique map $G: B \rightarrow D$ which maps any $a \in B$ to the unique fixed point of $F(\cdot, a)$, i.e. $F(G(a), a) = a$ for all $a \in B$.\\
+
+$F$ is linear in $a$, thus is $C^\infty$ in $a$. From the chain rule for Frechet derivatives, if $g$ is $C^k$, then $F$ is $C^k$ in $u$. Since $F: D \times B \rightarrow D$ is $C^K$, the map $G: B \rightarrow D$ is $C^k$ as well.
+
+\item We can now use $G$ to define the local stable manifold. We remind ourselves that $G(a)$ is a function from $[0, \infty)$ to $\R^n$ which lies in $D$. Thus we define the local stable manifold to be the initial value of all of these functions for all $a \in B$.
+
+\[
+W^s_{loc}(0) = \{ u_0 = G(a)(0) : a \in B \}
+\] 
+
+Since $G(a)$ is a fixed point of $F(G(a), a)$,
+
+\[
+G(a)(t) = e^{At} P^s a + \int_\infty^t e^{A(t-s)} P^u g(G(a)(s)) ds + \int_0^t e^{A(t-s)} P^s g(G(a)(s)) ds
+\]
+
+thus since $P^s a = a$,
+
+\[
+G(a)(0) = a + \int_\infty^0 e^{-As} P^u g(G(a)(s)) ds
+\]
+
+The integral term above is in $E^u$. Thus we define $h: B \rightarrow E^u$ by
+
+\[
+h(a) = \int_\infty^0 e^{-As} P^u g(G(a)(s)) ds
+\]
+
+Thus the local stable manifold is the graph of $h(a)$, where $a \in B$, i.e.
+
+\[
+W^s_{loc}(0) = \{ (a, h(a)) : a \in B \}
+\]
+
+Since $g(0) = 0$, $F(0, 0) = 0$ (the second 0 is the 0 function), thus since $G$ maps to the unique fixed point of $F$, $G(0) = 0$. It then follows from $g(0) = Dg(0) = 0$ that $h(0) = Dh(0) = 0$. Thus $W^s_{loc}$ is tangent to $E^s$ at 0.
+
+\item Next, we show that for any initial condition $u_0$ in $W^s_{loc}(0)$, the solution $u(t)$ to the system starting at $u_0$ decays exponentially to 0. We basically get this for free, since we used an exponentially weighted space. Take any point $(a, h(a) = (a, G(a)(0))$ as an initial condition. Recall that
+
+\[
+G(a)(t) = e^{At} P^s a + \int_\infty^t e^{A(t-s)} P^u g(G(a)(s)) ds + \int_0^t e^{A(t-s)} P^s g(G(a)(s)) ds
+\]
+
+Using the Leibniz rule for differentiating integrals, we differentiate this with respect to $t$ to get 
+
+\begin{align*}
+\frac{d}{dt}G(a)(t) &= A e^{At} P^s a + P^u g(G(a)(t)) + \int_\infty^t A e^{A(t-s)} P^u g(G(a)(s))) ds \\
+&+ P^s g(G(a)(t))
++ \int_0^t A e^{A(t-s)} P^s g(G(a)(s)) ds \\
+&= A\left(e^{At} P^s a + \int_\infty^t e^{A(t-s)} P^u g(G(a)(s)) ds + \int_0^t e^{A(t-s)} P^s g(G(a)(s)) ds \right) \\
+&+ (P^u + P^s)g(G(a)(t)) \\
+&= A G(a)(t) + g(G(a)(t))
+\end{align*}
+
+Thus $u(t) = G(a)(t)$ is the unique solution to the system with initial condition $(a, h(a)) \in W^s_{loc}(0)$. Since $u(t) \in D$, $|e^{\beta t}u(t)|\leq \rho$, which implies for $t \geq 0$
+\[
+|u(t)|\leq \rho e^{-\beta t}
+\]
+Thus $u(t)$ decays exponentially to 0.
+
+\item Finally, we show that $W^s_{loc}(0)$ is invariant under the flow of the system. If we start at an initial condition $(a, h(a)) = (a, G(a)(0))$ then at time $t$ we have 
+
+\[
+G(a)(t) = e^{At} P^s a + \int_\infty^t e^{A(t-s)} P^u g(G(a)(s)) ds + \int_0^t e^{A(t-s)} P^s g(G(a)(s)) ds
+\]
+
+We need to show that $G(a)(t) \in W^s_{loc}$, i.e. 
+$G(a)(t) = (a, h(a))$ for some $a$. Of course, we would like that $a$ to be $P^s G(a)(t)$. Since the equation for $G(a)(t)$ is naturally separated into stable and unstable components, we can write
+
+\[
+G(a)(t) = P^s G(a)(t) + \int_\infty^t e^{A(t-s)} P^u g(G(a)(s)) ds
+\]
+
+All that remains is to show that the second term on the RHS is $h( P^s G(a)(t) )$. Since $G(a)(t)$ is a solution to the ODE, by the properties of the flow of a dynamical system we have
+
+\[
+G( P^s G(a)(t) )(s) = G(a)(t+s)
+\] 
+
+Thus we have
+
+\begin{align*}
+h( P^s G(a)(t) ) &= \int_\infty^0 e^{-As} P^u g[G(P^s G(a)(t))(s)] ds \\
+&= \int_\infty^0 e^{-As} P^u g(G(a)(t+s)) ds \\
+&= \int_\infty^t e^{A(t-s)} P^u g(G(a)(s)) ds
+\end{align*}
+
+where we changed variables $t + s \rightarrow s$ in the last line. This is the RHS above, so we are all set! 
+
+\end{enumerate}
+\end{proof} 
+\end{theorem}
+
+Here are some important consequences of the stable manifold theorem.
+\begin{enumerate}
+
+\item We can define the stable manifold at 0 by running the points in the local stable manifold backwards in time under the flow. The points in the stable manifold eventually wind up in the local stable manifold as time flows forwards.
+
+\begin{align*}
+W^s(0) &= \{ u_0 : \Phi_t(u_0) \in W^s_{loc}(0) \text{ for some }t\geq 0 \}\\
+&= \{ u_0 : \Phi_t(u_0) \rightarrow 0 \text{ as } t \rightarrow \infty \} 
+\end{align*}
+
+\item We can similarly define the local unstable manifold $W^u_{loc}(0)$ by reversing time.
+
+\item If $u_0 \in W^s_{loc}(0)$, then the flow starting there remains in $W^s_{loc}(0)$ for $t \geq 0$ since $W^s_{loc}(0)$ is invariant. In other words, $u(t) = \Phi_t(u_0) \in W^s_{loc}(0)$ for $t \geq 0$. Using the Stable Manifold Theorem, we can write the solution $u(t)$ as
+
+\[
+u(t) = v(t) + h(v(t))
+\]
+
+where $v(t) \in E^s$ and $h(v(t)) \in E^u$. Since $u(t)$ solves the original ODE, we have
+
+\begin{align*}
+\dot{u}(t) = \dot{v}(t) + \frac{d}{dt}h(v(t)) 
+&= A(v(t) + h(v(t)) ) + g(v(t) + h(v(t)) \\
+&= A(v(t)) + A(h(v(t))) + g(v(t) + h(v(t))
+\end{align*}
+
+Taking the projection on $E^s$, we conclude that $v(t)$ satisfies the ODE
+
+\begin{align*}
+\dot{v} &= Av + P^s g(v + h(v)) \\
+v(0) = P^s u_0
+\end{align*}
+
+Thus we have an ODE for the flow on the local stable manifold.
+
+\end{enumerate}
+
+Finally, there is a parameter-dependent version of the stable manifold theorej.
+
+\begin{theorem}[Parameter Dependent Stable Manifold Theorem]
+Consider the autonomous ODE
+\begin{equation}
+\dot{u} = f(u, \mu)
+\end{equation}
+where $u \in \R^n$, $\mu \in \R^p$. Let $f \in C^k, k \geq 1$ with $f(0, 0) = 0$ and $A = f_u(0, 0)$ hyperbolic with stable and unstable eigenspaces $E^s$ and $E^u$. Let $\Phi_t(u_0; \mu)$ be the flow of the dynamical system. \\
+
+Then there are constants $r > 0$ and $\mu_0 > 0$ such that
+
+\begin{enumerate}
+\item For all $|\mu| \leq \mu_0$, the ODE has a unique equilibrium $u^*(\mu) \in B_r(0)$, with $u^*(0) = 0$
+
+\item There exists a $C^k$ map 
+
+\[
+h : \{ a \in E^s: |a| \leq r \} \times \{ \mu \in \R^p : |\mu| \leq \mu_0 \} \rightarrow E^u
+\]
+
+with $h(0, 0) = 0$ and $h_u(0, 0) = 0$ such that the local stable manifold is given by
+
+\[
+W^s_{loc}(u^*(\mu), \mu) = \{ (a, h(a, \mu)) : a \in E^s, |a| \leq r, |\mu| \leq \mu_0 \}
+\]
+
+$W^s_{loc}(u^*(\mu), \mu)$ is forward invariant under the flow $\Phi_t(\cdot, \mu)$. Initial conditions in $W^s_{loc}(u^*(\mu), \mu)$ decay exponentially to $u^*(\mu)$.\\
+
+\item $W^s_{loc}(u^*(\mu), \mu)$ is tangent to the stable eigenspace of $f_u(u^*(\mu),\mu)$ at $u^*(\mu)$.
+\end{enumerate}
+\end{theorem}
+
+
+
 
 
 \end{document}
